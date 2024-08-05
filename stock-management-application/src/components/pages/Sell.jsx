@@ -17,11 +17,13 @@ const Sell = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("sending to backend");
+    console.table(data);
     axios
       .post(`http://localhost:8800/api/sales/makeSales`, data)
       .then((res) => {
         console.log(res.data);
-        navigate();
+        alert("your sells have been made");
+        navigate("/pages/sell");
       })
       .catch((err) => {
         console.error(err.message);
@@ -34,31 +36,32 @@ const Sell = () => {
   };
 
   return (
-    <>
-      <div className="col-span-2 row-span-3 mt-5 ">
+    <div className=" w-full mb-2 col-span-4 row-span-3 overflow-hidden md:no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
+      <div className="w-full  mt-5 md:pt-28 ">
         <form
           action=""
           onSubmit={handleSubmit}
-          className="w-full h-full flex-col justify-center items-center pl-10 "
+          className="w-full flex-col justify-center items-center pl-10 md:pb-20 pt-5"
         >
-          <h1 className="md:text-4xl text-3xl font-bold">Sell Now</h1>
+          <h1 className="md:text-4xl text-3xl font-bold">
+            Sell <span className="text-blue-300">Now</span>
+          </h1>
           <p className="text-xs pt-3 pb-7">Place to make growth!!</p>
-          <label htmlFor="" className="text-xs pt-28">
+          <label htmlFor="" className="text-xs pt-1">
             Product Name
           </label>
           <br />
           <select
-            onSelect={(value) => {
-              setData({ ...data, product_id: value });
-            }}
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+            name="product_id"
+            onChange={handleChange}
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           >
-            <option value="0">Aluminium panel: 000</option>
-            <option value="1">Rail: 001</option>
-            <option value="2">Aluminium plate: 002</option>
+            <option value="1">Aluminium panel: 001</option>
+            <option value="2">Rail: 002</option>
+            <option value="0">Aluminium plate: 000</option>
           </select>
           <br />
-          <label htmlFor="" className="text-xs pt-28">
+          <label htmlFor="" className="text-xs mt-16">
             Quantity
           </label>
           <br />
@@ -68,7 +71,7 @@ const Sell = () => {
             onChange={handleChange}
             id=""
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
           <label htmlFor="date" className="text-xs pt-28">
@@ -81,20 +84,7 @@ const Sell = () => {
             onChange={handleChange}
             id="date"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
-          />
-          <br />
-          <label htmlFor="description" className="text-xs pt-28">
-            Description
-          </label>
-          <br />
-          <input
-            type="text"
-            onChange={handleChange}
-            name="description"
-            id="description"
-            required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
           <label htmlFor="price" className="text-xs pt-28">
@@ -107,7 +97,7 @@ const Sell = () => {
             name="unit_price"
             id="price"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
           <label htmlFor="customer" className="text-xs pt-28">
@@ -120,22 +110,35 @@ const Sell = () => {
             name="customer"
             id="customer"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+          />
+          <br />
+          <label htmlFor="description" className="text-xs pt-28">
+            Description
+          </label>
+          <br />
+          <textarea
+            type="text"
+            onChange={handleChange}
+            name="description"
+            id="description"
+            required
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border-2 rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
           <button
             type="submit"
-            className="rounded-full bg-mybtn md:w-80 w-72 my-4 py-2.5 text-xs font-bold "
+            className="rounded-full tracking-widest bg-blue-400 w-11/12 my-4 py-2.5 text-xs font-bold "
           >
-            Submit
+            SUBMIT
           </button>
           <br />
         </form>
       </div>
-      <div className="col-span-2 row-span-3 mt-5">
-        <img src={sell} alt="kermen logo" className="w-2/3 pl-10 pt-20" />
+      <div className="mt-5 md:pb-0 pb-16">
+        <img src={sell} alt="kermen logo" className="w-4/5 pl-10 pt-20" />
       </div>
-    </>
+    </div>
   );
 };
 
