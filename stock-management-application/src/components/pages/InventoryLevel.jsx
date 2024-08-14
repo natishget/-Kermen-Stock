@@ -72,9 +72,7 @@ const InventoryLevel = () => {
                   {inventory.Product_name}
                 </th>
                 <td className="px-6 py-4">{inventory.Quantity}</td>
-                <td className="px-6 py-4">
-                  {formatDate(inventory.Last_UpdateDate)}
-                </td>
+                <td className="px-6 py-4">{formatDate(inventory.Date)}</td>
               </tr>
             ))
           )}
