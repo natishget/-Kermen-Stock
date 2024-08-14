@@ -12,6 +12,11 @@ const getAllDataHandler = async (req, res) => {
     const [beginningInventoryRows] = await pool.query(
       "SELECT SUM(Total_Price) AS TotalBeginningPrice, COUNT(*) AS BeginningInventoryCount FROM beginning_inventory"
     );
+    const [monthlySalesRows] = await pool.query(
+      "SELECT DATE_FORMAT(Date, '%Y-%m') AS Month, SUM(Total_Price) AS Monthly_Sales FROM sales WHERE Date <= DATE_FORMAT(CURDATE(), '%Y-09-01') AND Date < DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY) GROUP BY DATE_FORMAT(Date, '%Y-%m') ORDER BY Month;"
+    );
+
+    console.log(monthlySalesRows);
 
     const totalSalesPrice = parseFloat(salesRows[0].TotalSalesPrice) || 0;
     const salesCount = parseInt(salesRows[0].SalesCount) || 0;

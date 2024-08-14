@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import buy from "../../assets/buy.png";
 
 const Buy = () => {
-  const navigate = useNavigate();
   const [data, setData] = useState({
     product_id: "0",
     quantity: "",
@@ -12,6 +10,7 @@ const Buy = () => {
     description: "",
     unit_price: "",
     invoice_no: "",
+    seller: "",
   });
 
   const handleSubmit = (e) => {
@@ -20,7 +19,10 @@ const Buy = () => {
       .post(`http://localhost:8800/api/purchase/makePurchase`, data)
       .then((res) => {
         console.log(res.data);
-        if (res.data === "1") navigate("/pages/buy");
+        if (res.data === "1") {
+          alert("successfully purchased");
+          window.location.reload();
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -109,6 +111,19 @@ const Buy = () => {
             onChange={handleChange}
             name="unit_price"
             id="price"
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+             border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+          />
+          <br />
+          <label htmlFor="description" className="text-xs pt-28">
+            Seller Name
+          </label>
+          <br />
+          <input
+            type="text"
+            onChange={handleChange}
+            name="seller"
+            id="seller"
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />

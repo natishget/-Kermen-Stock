@@ -52,7 +52,10 @@ const Purchase = () => {
               Description
             </th>
             <th scope="col" className="px-6 py-3">
-              Price
+              unit Price
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Seller
             </th>
           </tr>
         </thead>
@@ -81,8 +84,8 @@ const Purchase = () => {
                 <td className="px-6 py-4">{purchases.Quantity}</td>
                 <td className="px-6 py-4">{formatDate(purchases.Date)}</td>
                 <td className="px-6 py-4">{purchases.Description}</td>
-                <td className="px-6 py-4">{purchases.Unit_price} Br</td>
-                <td className="px-6 py-4">{purchases.Customer_Name}</td>
+                <td className="px-6 py-4">{purchases.Unit_Price} Br</td>
+                <td className="px-6 py-4">{purchases.Seller}</td>
               </tr>
             ))
           )}

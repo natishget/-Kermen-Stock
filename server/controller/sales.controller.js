@@ -11,7 +11,6 @@ export const allSalesHandler = async (req, res) => {
       return res.status(400).json({ msg: "No Data found" });
     }
     console.log("successful");
-    console.table(rows);
     return res.json(rows);
   } catch (error) {
     console.log(error);
