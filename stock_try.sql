@@ -187,3 +187,58 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+-- sales handler producer
+DELIMITER $$
+
+CREATE PROCEDURE HandleSale(
+    IN product_id INT,
+    IN sale_quantity INT,
+    IN sale_date DATETIME,
+    IN Description VARCHAR(255),
+    IN Unit_Price DECIMAL(10, 2),
+    IN customer_name VARCHAR(255)
+)
+BEGIN
+    DECLARE current_quantity INT;
+    DECLARE Total_Price DECIMAL(10, 2);
+
+    -- Calculate the total price
+    SET Total_Price = sale_quantity * Unit_Price;
+
+    -- Start transaction
+    START TRANSACTION;
+
+    -- Get the current quantity from inventory_level
+    SELECT Quantity INTO current_quantity
+    FROM inventory_level
+    WHERE PID = product_id
+    FOR UPDATE;
+
+    -- Check if sufficient quantity is available
+    IF current_quantity IS NULL THEN
+        -- Product does not exist in inventory_level
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product does not exist in inventory_level';
+    ELSEIF current_quantity < sale_quantity THEN
+        -- Insufficient quantity
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity in inventory_level';
+    ELSE
+        -- Insert into sales table
+        INSERT INTO sales (PID, Quantity, Date, Description, Unit_price, Customer_Name, Total_Price)
+        VALUES (product_id, sale_quantity, sale_date, Description, Unit_Price, customer_name, Total_Price);
+
+        -- Update inventory_level table
+        UPDATE inventory_level
+        SET Quantity = Quantity - sale_quantity, Date = NOW()
+        WHERE PID = product_id;
+
+        -- Commit transaction
+        COMMIT;
+    END IF;
+
+END $$
+
+DELIMITER ;

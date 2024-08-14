@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import sell from "../../assets/sell.png";
 
 const Sell = () => {
-  const navigate = useNavigate();
   const [data, setData] = useState({
     product_id: "0",
     quantity: "",
@@ -21,13 +19,16 @@ const Sell = () => {
     axios
       .post(`http://localhost:8800/api/sales/makeSales`, data)
       .then((res) => {
-        console.log(res.data);
-        alert("your sells have been made");
-        navigate("/pages/sell");
+        console.log(res.data.messsage);
+        if (res.data.message === "Yes") {
+          alert("your sells have been made");
+          window.location.reload();
+        } else {
+          throw new Error("Insufficient quantity");
+        }
       })
       .catch((err) => {
-        console.error(err.message);
-        alert("something wrong please try again after refereshing");
+        alert(err instanceof Error ? err.message : "An error occurred");
       });
   };
 

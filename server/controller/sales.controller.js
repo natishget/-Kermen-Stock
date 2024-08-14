@@ -22,27 +22,21 @@ export const makeSalesHandler = async (req, res) => {
   console.log("creating a sell in process again");
   const { product_id, quantity, date, description, unit_price, customer } =
     req.body;
-  console.log(
-    product_id + quantity + date + description + unit_price + customer
-  );
   try {
-    const [rows] = await pool.query(
-      "INSERT INTO sales (PID, Quantity, Unit_price, Date, Description, Customer_Name, Total_Price) VALUES (?, ?, ?, ?, ?, ?, ?);",
-      [
-        product_id,
-        quantity,
-        unit_price,
-        date,
-        description,
-        customer,
-        quantity * unit_price,
-      ]
-    );
+    const [rows] = await pool.query(`CALL HandleSale(?, ?, ?, ?, ?, ?)`, [
+      product_id,
+      quantity,
+      date,
+      description,
+      unit_price,
+      customer,
+    ]);
     if (rows.length === 0) {
       return res.json({ message: "No" });
     }
     return res.json({ message: "Yes" });
   } catch (err) {
-    console.log(err);
+    console.log(err.sqlMessage);
+    return res.json({ message: err.sqlMessage });
   }
 };
