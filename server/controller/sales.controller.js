@@ -11,7 +11,6 @@ export const allSalesHandler = async (req, res) => {
       return res.status(400).json({ msg: "No Data found" });
     }
     console.log("successful");
-    console.table(rows);
     return res.json(rows);
   } catch (error) {
     console.log(error);
@@ -28,8 +27,16 @@ export const makeSalesHandler = async (req, res) => {
   );
   try {
     const [rows] = await pool.query(
-      "INSERT INTO sales (PID, Quantity, Unit_price, Date, Description) VALUES (?, ?, ?, ?, ?);",
-      [product_id, quantity, unit_price, date, description]
+      "INSERT INTO sales (PID, Quantity, Unit_price, Date, Description, Customer_Name, Total_Price) VALUES (?, ?, ?, ?, ?, ?, ?);",
+      [
+        product_id,
+        quantity,
+        unit_price,
+        date,
+        description,
+        customer,
+        quantity * unit_price,
+      ]
     );
     if (rows.length === 0) {
       return res.json({ message: "No" });

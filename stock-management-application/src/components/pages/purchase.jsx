@@ -35,8 +35,8 @@ const Purchase = () => {
   }
 
   return (
-    <div className="col-span-4 row-span-3  relative overflow-x-auto">
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <div className="col-span-4 row-span-3 overflow-hidden no-scrollbar hover:overflow-y-scroll  relative overflow-x-auto">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mb-16">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
@@ -52,7 +52,10 @@ const Purchase = () => {
               Description
             </th>
             <th scope="col" className="px-6 py-3">
-              Price
+              unit Price
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Seller
             </th>
           </tr>
         </thead>
@@ -81,8 +84,8 @@ const Purchase = () => {
                 <td className="px-6 py-4">{purchases.Quantity}</td>
                 <td className="px-6 py-4">{formatDate(purchases.Date)}</td>
                 <td className="px-6 py-4">{purchases.Description}</td>
-                <td className="px-6 py-4">{purchases.Unit_price} Br</td>
-                <td className="px-6 py-4">{purchases.Customer_Name}</td>
+                <td className="px-6 py-4">{purchases.Unit_Price} Br</td>
+                <td className="px-6 py-4">{purchases.Seller}</td>
               </tr>
             ))
           )}

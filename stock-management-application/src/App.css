@@ -9,7 +9,7 @@ li::before {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 2px;
 }
 
 /* Track */

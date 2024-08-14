@@ -10,7 +10,6 @@ const Sales = () => {
     axios
       .get(`http://localhost:8800/api/sales/allSales`)
       .then((res) => {
-        console.table(res.data);
         setAllSales(res.data);
       })
       .catch((err) => {
@@ -37,8 +36,8 @@ const Sales = () => {
 
   return (
     <>
-      <div className="col-span-4 row-span-3 relative overflow-x-auto">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <div className="col-span-4 row-span-3 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mb-16">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
