@@ -75,7 +75,6 @@ const Purchase = () => {
         accessorKey: "Date", //normal accessorKey
         header: "Sales Date",
         size: 190,
-        Cell: ({ cell }) => formatDate(cell.getValue()), // Format the date using the formatDate function
       },
       {
         accessorKey: "Description",

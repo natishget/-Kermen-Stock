@@ -83,7 +83,10 @@ const Sales = () => {
     Date: "",
     Description: "",
   });
+<<<<<<< HEAD
   const [edit, setEdit] = useState({ dere: "43" });
+=======
+>>>>>>> 31c339c (sale and purchase)
   const [userId, setUserId] = useState(); // This state is not used, so you might consider removing it if it's unnecessary.
 
   const columns = useMemo(
@@ -102,7 +105,10 @@ const Sales = () => {
         accessorKey: "Date", //normal accessorKey
         header: "Sales Date",
         size: 190,
+<<<<<<< HEAD
         Cell: ({ cell }) => formatDate(cell.getValue()), // Format the date using the formatDate function
+=======
+>>>>>>> 31c339c (sale and purchase)
       },
       {
         accessorKey: "Description",
@@ -220,12 +226,15 @@ const Sales = () => {
   const handleEditedSale = (e) => {
     const { name, value } = e.target;
     setEditedSale({ ...editedSale, [name]: value });
+<<<<<<< HEAD
     console.log(name + value);
   };
 
   const handleChange = (e) => {
     setEdit({ ...edit, [e.target.name]: e.target.value });
     console.log(e.target.name + e.target.value + "\n" + edit);
+=======
+>>>>>>> 31c339c (sale and purchase)
   };
 
   const formatDate = (datetimeString) => {
@@ -333,15 +342,22 @@ const Sales = () => {
                     <Dialog>
                       <DialogTrigger asChild>
                         <EditIcon sx={{ color: "#2a9eb8" }} />
+<<<<<<< HEAD
 
                         {/* Using a Button as the trigger for clarity */}
+=======
+>>>>>>> 31c339c (sale and purchase)
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
                           <DialogTitle>Edit profile</DialogTitle>
                           <DialogDescription>
                             Make changes to your profile here. Click save when
+<<<<<<< HEAD
                             you&apos;re done.
+=======
+                            youa&apos;re done.
+>>>>>>> 31c339c (sale and purchase)
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
@@ -350,9 +366,24 @@ const Sales = () => {
                               Product Name:
                             </Label>
                             <select
+<<<<<<< HEAD
                               name="dere"
                               id="prod_name"
                               onChange={handleChange}
+=======
+                              name="PID"
+                              id="prod_name"
+                              value={editedSale.PID}
+                              onChange={(e) => {
+                                console.log(editedSale);
+                                console.log(e.target.value);
+                                setEditedSale({
+                                  ...editedSale,
+                                  PID: e.target.value,
+                                });
+                                console.log(editedSale);
+                              }}
+>>>>>>> 31c339c (sale and purchase)
                               className=" col-span-3 py-2 px-1 border-[1px] border-slate-200 rounded-md"
                             >
                               <option value="1">Aluminium panel: 001</option>
