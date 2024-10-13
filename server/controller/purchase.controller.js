@@ -26,11 +26,24 @@ export const makePurchaseHandler = async (req, res) => {
     unit_price,
     invoice_no,
     seller,
+    color,
   } = req.body;
+  console.log("color", color);
+  console.log("seller", seller);
+
   try {
     const [rows] = await pool.query(
-      `CALL UpdateInventory(?, ?, ?, ?, ?, ?, ?)`,
-      [product_id, quantity, invoice_no, unit_price, description, seller, date]
+      `CALL UpdateInventory(?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        product_id,
+        quantity,
+        invoice_no,
+        unit_price,
+        description,
+        seller,
+        date,
+        color,
+      ]
     );
     console.log("successful");
     return res.json("1");

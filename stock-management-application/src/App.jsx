@@ -1,19 +1,21 @@
 // App.jsx
-import React from 'react'
-import LoginComponent from './components/Login'
-import Pages from './components/Pages'
-import { BrowserRouter,Routes,Route } from 'react-router-dom'
-
+import React from "react";
+import LoginComponent from "./components/Login";
+import Pages from "./components/Pages";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./components/CartContext";
 
 const App = () => {
-    return (    
-       <BrowserRouter>
+  return (
+    <CartProvider>
+      <BrowserRouter>
         <Routes>
-         <Route index  element={<LoginComponent/>}/>
-         <Route path='/pages/*'  element={<Pages/>}/>
-         </Routes>
-       </BrowserRouter>
-    )
-}
+          <Route index element={<LoginComponent />} />
+          <Route path="/pages/*" element={<Pages />} />
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
+  );
+};
 
-export default App
+export default App;

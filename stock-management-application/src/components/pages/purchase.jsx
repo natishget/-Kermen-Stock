@@ -52,6 +52,7 @@ const Purchase = () => {
         accessorKey: "Date", //normal accessorKey
         header: "Sales Date",
         size: 190,
+        Cell: ({ cell }) => formatDate(cell.getValue()), // Format the date using the formatDate function
       },
       {
         accessorKey: "Description",
@@ -174,7 +175,7 @@ const Purchase = () => {
 
   if (isLoading) {
     return (
-      <div className="flex w-full h-full justify-center items-center px-6 py-4 font-medium text-2xl text-gray-900 whitespace-nowrap dark:text-white">
+      <div className="flex w-full h-full justify-center items-center px-6 py-4 font-medium text-2xl text-gray-500 whitespace-nowrap dark:text-white">
         Loading...
       </div>
     );

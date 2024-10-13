@@ -11,35 +11,50 @@ const Buy = () => {
     unit_price: "",
     invoice_no: "",
     seller: "",
+    color: "",
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post(`http://localhost:8800/api/purchase/makePurchase`, data)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data === "1") {
-          alert("successfully purchased");
-          window.location.reload();
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("something wrong please trying again after refreshing");
-      });
+  const handleSubmit = () => {
+    if (
+      data.quantity === "" ||
+      data.date === "" ||
+      data.unit_price === "" ||
+      data.invoice_no === "" ||
+      data.seller === "" ||
+      data.color === ""
+    )
+      alert("Please Fill the form properly");
+    else {
+      axios
+        .post(`http://localhost:8800/api/purchase/makePurchase`, data)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data === "1") {
+            alert("successfully purchased");
+            window.location.reload();
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("something wrong please trying again after refreshing");
+        });
+    }
   };
 
   const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+    if (e.target.name === "color") {
+      const color = e.target.value.toLowerCase();
+      setData({ ...data, [e.target.name]: color });
+    } else {
+      setData({ ...data, [e.target.name]: e.target.value });
+    }
   };
 
   return (
     <div className="col-span-4 row-span-3 overflow-hidden no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
-      <div className="w-full mt-5 md:pt-28 pt-0">
+      <div className="w-full mt-24 md:pt-28 pt-0">
         <form
           action=""
-          onSubmit={handleSubmit}
           className="w-full flex-col justify-center items-center pl-10 md:pb-20 pt-5"
         >
           <h1 className="md:text-4xl text-3xl font-bold">
@@ -115,6 +130,19 @@ const Buy = () => {
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
+          <label htmlFor="color" className="text-xs pt-28">
+            Color
+          </label>
+          <br />
+          <input
+            type="text"
+            onChange={handleChange}
+            name="color"
+            id="color"
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+             border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+          />
+          <br />
           <label htmlFor="description" className="text-xs pt-28">
             Seller Name
           </label>
@@ -142,7 +170,7 @@ const Buy = () => {
           />
           <br />
           <button
-            type="submit"
+            onClick={handleSubmit}
             className="rounded-full bg-yellow-500 tracking-widest md:w-11/12 w-72 my-4 py-2.5 text-xs font-bold "
           >
             SUBMIT

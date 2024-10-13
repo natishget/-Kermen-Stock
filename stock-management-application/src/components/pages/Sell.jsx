@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import sell from "../../assets/sell.png";
+import cart from "../../assets/icons/cart.svg";
+import { CartContext } from "../CartContext";
 
 const Sell = () => {
+  const { addToCart } = useContext(CartContext);
   const [data, setData] = useState({
     product_id: "0",
     quantity: "",
@@ -10,6 +13,7 @@ const Sell = () => {
     description: "",
     unit_price: "",
     customer: "",
+    color: "",
   });
 
   const handleSubmit = (e) => {
@@ -36,9 +40,24 @@ const Sell = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
+  const handleAddToCart = () => {
+    if (
+      data.quantity === "" ||
+      data.date === "" ||
+      data.description === "" ||
+      data.unit_price === "" ||
+      data.color === ""
+    )
+      alert("fill the form propely");
+    else {
+      addToCart(data);
+      alert("Item added to cart");
+    }
+  };
+
   return (
     <div className=" w-full mb-2 col-span-4 row-span-3 overflow-hidden md:no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
-      <div className="w-full  mt-5 md:pt-28 ">
+      <div className="w-full mt-24 md:pt-28 ">
         <form
           action=""
           onSubmit={handleSubmit}
@@ -101,6 +120,19 @@ const Sell = () => {
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
+          <label htmlFor="color" className="text-xs pt-28">
+            Color
+          </label>
+          <br />
+          <input
+            type="text"
+            onChange={handleChange}
+            name="color"
+            id="price"
+            required
+            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+          />
+          <br />
           <label htmlFor="customer" className="text-xs pt-28">
             Customer Name /Optional/
           </label>
@@ -127,17 +159,25 @@ const Sell = () => {
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border-2 rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <button
+          {/* <button
             type="submit"
             className="rounded-full tracking-widest bg-blue-400 w-11/12 my-4 py-2.5 text-xs font-bold "
           >
             SUBMIT
+          </button> */}
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="rounded-full  flex justify-center items-start bg-blue-400 text-black w-11/12 my-4 py-2.5 text-sm font-bold "
+          >
+            <img src={cart} alt="" className="w-6 mr-3" />
+            <div>Add To Cart</div>
           </button>
           <br />
         </form>
       </div>
       <div className="mt-5 md:pb-0 pb-16">
-        <img src={sell} alt="kermen logo" className="w-4/5 pl-10 pt-20" />
+        <img src={sell} alt="" className="w-4/5 pl-10 pt-20" />
       </div>
     </div>
   );
