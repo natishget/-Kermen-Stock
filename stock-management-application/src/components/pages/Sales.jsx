@@ -83,7 +83,6 @@ const Sales = () => {
     Date: "",
     Description: "",
   });
-  const [edit, setEdit] = useState({ dere: "43" });
   const [userId, setUserId] = useState(); // This state is not used, so you might consider removing it if it's unnecessary.
 
   const columns = useMemo(
@@ -102,7 +101,6 @@ const Sales = () => {
         accessorKey: "Date", //normal accessorKey
         header: "Sales Date",
         size: 190,
-        Cell: ({ cell }) => formatDate(cell.getValue()), // Format the date using the formatDate function
       },
       {
         accessorKey: "Description",
@@ -220,12 +218,6 @@ const Sales = () => {
   const handleEditedSale = (e) => {
     const { name, value } = e.target;
     setEditedSale({ ...editedSale, [name]: value });
-    console.log(name + value);
-  };
-
-  const handleChange = (e) => {
-    setEdit({ ...edit, [e.target.name]: e.target.value });
-    console.log(e.target.name + e.target.value + "\n" + edit);
   };
 
   const formatDate = (datetimeString) => {
