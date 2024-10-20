@@ -9,6 +9,8 @@ import Buy from "../components/pages/buy";
 import Purchase from "../components/pages/purchase";
 import Sales from "../components/pages/Sales";
 import Develop from "../components//pages/InventoryLevel";
+import Cart from "./pages/Cart";
+import CartImg from "../assets/icons/cart.svg";
 
 const Pages = () => {
   const location = useLocation();
@@ -27,6 +29,8 @@ const Pages = () => {
       setCurrentPath("Sales");
     } else if (location.pathname === "/pages/inventory") {
       setCurrentPath("Inventory Levels");
+    } else if (location.pathname === "/pages/cart") {
+      setCurrentPath("Carts");
     } else {
       setCurrentPath("");
     }
@@ -42,10 +46,19 @@ const Pages = () => {
           Stock Management Application -
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
-        <Link to="/" className="flex justify-center items-center">
-          Logout
-          <img src={icon_logout} alt="Kermen logo" className="w-10 p-2" />
-        </Link>
+        <div className="flex justify-center items-center">
+          <Link to="/pages/cart">
+            <img
+              src={CartImg}
+              alt="cart"
+              className="fill-yellow-500 mr-6 w-8"
+            />
+          </Link>
+          <Link to="/" className="flex justify-center items-center">
+            Logout
+            <img src={icon_logout} alt="Kermen logo" className="w-10 p-2" />
+          </Link>
+        </div>
       </header>
 
       <div className="grid grid-cols-5 grid-rows-3 h-full">
@@ -58,6 +71,7 @@ const Pages = () => {
           <Route path="purchase" element={<Purchase />} />
           <Route path="sales" element={<Sales />} />
           <Route path="inventory" element={<Develop />} />
+          <Route path="cart" element={<Cart />} />
         </Routes>
         {/* </BrowserRouter>  */}
       </div>
