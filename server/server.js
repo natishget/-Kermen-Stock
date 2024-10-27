@@ -30,6 +30,6 @@ app.listen(8800, () => {
   console.log("Connected to backend on port 8800.");
 });
 
-console.log("server is running");
+console.log("server is running on 8800");
 
 // console.log(await bcrypt.hash("123456", 10));
