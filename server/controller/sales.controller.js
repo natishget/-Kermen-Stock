@@ -47,7 +47,7 @@ export const makeSalesHandler = async (req, res) => {
       } = sale;
 
       // Execute the stored procedure or query for each sale
-      const [rows] = await pool.query(`CALL HandleSale(?, ?, ?, ?, ?, ?)`, [
+      const [rows] = await pool.query(`CALL HandleSale(?, ?, ?, ?, ?, ?, ?)`, [
         product_id,
         quantity,
         date,
@@ -56,6 +56,8 @@ export const makeSalesHandler = async (req, res) => {
         customer,
         color,
       ]);
+
+      console.log("rows", rows);
 
       if (rows.length === 0) {
         await pool.query("ROLLBACK");
