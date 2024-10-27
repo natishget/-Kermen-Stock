@@ -23,29 +23,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
-import { createTheme, ThemeProvider, useTheme } from "@mui/material";
-import { Box, IconButton } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Email as EmailIcon,
-} from "@mui/icons-material";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 const Purchase = () => {
   const [allPurchases, setAllPurchases] = useState([]);
@@ -75,7 +52,6 @@ const Purchase = () => {
         accessorKey: "Date", //normal accessorKey
         header: "Sales Date",
         size: 190,
-        Cell: ({ cell }) => formatDate(cell.getValue()), // Format the date using the formatDate function
       },
       {
         accessorKey: "Description",
