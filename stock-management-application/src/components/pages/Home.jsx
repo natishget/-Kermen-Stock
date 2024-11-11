@@ -4,8 +4,12 @@ import Card2 from "../Card2";
 import LineChart from "../charts/LineGraph";
 import axios from "axios";
 
-const Home = () => {
+const Home = ({ userData }) => {
   const [homeData, setHomeData] = useState([]);
+  //axios credentials
+  axios.defaults.withCredentials = true;
+  // protected Route
+
   useEffect(() => {
     axios
       .get(`http://localhost:8800/api/getData/allData`)

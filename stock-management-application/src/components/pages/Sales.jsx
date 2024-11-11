@@ -82,6 +82,8 @@ const Sales = () => {
     Customer_Name: "natnael",
     Date: "",
     Description: "",
+    Color: "",
+    isImported: "",
   });
   const [edit, setEdit] = useState({ dere: "43" });
   const [userId, setUserId] = useState(); // This state is not used, so you might consider removing it if it's unnecessary.
@@ -118,6 +120,16 @@ const Sales = () => {
         accessorKey: "Customer_Name",
         header: "Customer",
         size: 110,
+      },
+      {
+        accessorKey: "Color",
+        header: "Color",
+        size: 70,
+      },
+      {
+        accessorKey: "isImported",
+        header: "Imported",
+        size: 70,
       },
     ],
     []
@@ -327,6 +339,8 @@ const Sales = () => {
                         Customer_Name: row.original.Customer_Name,
                         Date: row.original.Date,
                         Description: row.original.Description,
+                        Color: row.original.Color,
+                        isImported: row.original.isImported,
                       });
                     }}
                   >

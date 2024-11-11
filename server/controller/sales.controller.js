@@ -22,6 +22,7 @@ export const makeSalesHandler = async (req, res) => {
   console.log("creating multiple sales in process");
 
   const sales = req.body; // Expecting an array of sales
+  console.table(sales);
 
   // Ensure that we received an array of sales
   if (!Array.isArray(sales) || sales.length === 0) {
@@ -44,18 +45,23 @@ export const makeSalesHandler = async (req, res) => {
         unit_price,
         customer,
         color,
+        isimported,
       } = sale;
 
       // Execute the stored procedure or query for each sale
-      const [rows] = await pool.query(`CALL HandleSale(?, ?, ?, ?, ?, ?, ?)`, [
-        product_id,
-        quantity,
-        date,
-        description,
-        unit_price,
-        customer,
-        color,
-      ]);
+      const [rows] = await pool.query(
+        `CALL HandleSale(?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          product_id,
+          quantity,
+          date,
+          description,
+          unit_price,
+          customer,
+          color,
+          isimported,
+        ]
+      );
 
       console.log("rows", rows);
 
@@ -93,6 +99,7 @@ export const makeSalesHandler = async (req, res) => {
       doc.text(`Unit Price: ${sale.unit_price}`);
       doc.text(`Customer: ${sale.customer}`);
       doc.text(`Color: ${sale.color}`);
+      doc.text(`Imported: ${isimported}`);
       doc.text(
         "---------------------------------------------------------------------------------"
       );

@@ -12,6 +12,7 @@ const Buy = () => {
     invoice_no: "",
     seller: "",
     color: "",
+    isimported: 1,
   });
 
   const handleSubmit = () => {
@@ -48,6 +49,13 @@ const Buy = () => {
     } else {
       setData({ ...data, [e.target.name]: e.target.value });
     }
+  };
+
+  const handleOptionChange = (e) => {
+    console.log("checkbox clicked");
+    data.isimported === 1
+      ? setData({ ...data, isimported: 0 })
+      : setData({ ...data, isimported: 1 });
   };
 
   return (
@@ -167,6 +175,18 @@ const Buy = () => {
             id="description"
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+          />
+          <br />
+          <label htmlFor="isImported" className="text-xs">
+            Imported
+          </label>
+          <input
+            type="radio"
+            onClick={handleOptionChange}
+            checked={data.isimported === 1}
+            name="isimported"
+            id="isImported"
+            className=" border-white border rounded-2xl bg-mybg  w-11/12 "
           />
           <br />
           <button
