@@ -2,8 +2,10 @@
 import React, { useContext } from "react";
 import { CartContext } from "../CartContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const { cart, clearCart } = useContext(CartContext);
 
   const handleSubmit = () => {
@@ -30,7 +32,7 @@ const Cart = () => {
         link.remove(); // Remove the link after download
       })
       .catch((err) => {
-        console.error("Error downloading PDF", err);
+        console.error("Error downloading PDF", err.message);
       });
   };
 
@@ -48,6 +50,7 @@ const Cart = () => {
               <p>Price: {item.unit_price}</p>
               <p>Date: {item.date}</p>
               <p>Color: {item.color}</p>
+              <p>imported: {item.isimported}</p>
             </div>
           ))}
           <button

@@ -6,89 +6,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `stock_try`
 --
-
-DELIMITER $$
---
--- Procedures
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `HandleSale` (IN `product_id` INT, IN `sale_quantity` INT, IN `sale_date` DATETIME, IN `Description` VARCHAR(255), IN `Unit_Price` DECIMAL(10,2), IN `customer_name` VARCHAR(255), IN `color` VARCHAR(25))   BEGIN
-    DECLARE current_quantity INT;
-    DECLARE Total_Price DECIMAL(10, 2);
-
-    -- Calculate the total price
-    SET Total_Price = sale_quantity * Unit_Price;
-
-    -- Start transaction
-    START TRANSACTION;
-
-    -- Get the current quantity from inventory_level
-    SELECT Quantity INTO current_quantity
-    FROM inventory_level
-    WHERE PID = product_id AND Color = color
-    FOR UPDATE;
-
-    -- Check if sufficient quantity is available
-    IF current_quantity IS NULL THEN
-        -- Product does not exist in inventory_level
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product does not exist in inventory_level';
-    ELSEIF current_quantity < sale_quantity THEN
-        -- Insufficient quantity
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity in inventory_level';
-    ELSE
-        -- Insert into sales table
-        INSERT INTO sales (PID, Quantity, Date, Description, Unit_price, Customer_Name, Total_Price, Color)
-        VALUES (product_id, sale_quantity, sale_date, Description, Unit_Price, customer_name, Total_Price, color);
-
-        -- Update inventory_level table
-        UPDATE inventory_level
-        SET Quantity = Quantity - sale_quantity, Date = NOW()
-        WHERE PID = product_id AND Color = color;
-
-        -- Commit transaction
-        COMMIT;
-    END IF;
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateInventory` (IN `product_id` INT, IN `purchase_quantity` INT, IN `Invoice_No` VARCHAR(255), IN `Unit_Price` DECIMAL(10,2), IN `Description` VARCHAR(255), IN `Seller` VARCHAR(255), IN `Purchase_Date` DATETIME, IN `color` VARCHAR(25))   BEGIN
-    DECLARE Total_Price DECIMAL(10, 2);
-
-    -- Calculate the total price
-    SET Total_Price = purchase_quantity * Unit_Price;
-
-    -- Start transaction
-    START TRANSACTION;
-
-    -- Lock the inventory_level table to prevent other writes
-    SELECT * FROM inventory_level WHERE PID = product_id AND Color = color FOR UPDATE;
-
-    -- Check if the product exists in inventory_level
-    IF EXISTS (SELECT 1 FROM inventory_level WHERE PID = product_id AND Color = color) THEN
-        -- Update Inventory_Level table
-        UPDATE inventory_level
-        SET Quantity = Quantity + purchase_quantity, Date = NOW()
-        WHERE PID = product_id;
-    ELSE
-        -- Insert the product into inventory_level if it does not exist
-        INSERT INTO inventory_level (PID, Quantity, Date)
-        VALUES (product_id, purchase_quantity, NOW());
-    END IF;
-
-    -- Insert into Purchased_Inventory table
-    INSERT INTO purchased_inventory (PID, Quantity, Invoice_No, Unit_Price, Date, Description, Total_Price, Seller)
-    VALUES (product_id, purchase_quantity, Invoice_No, Unit_Price, Purchase_Date, Description, Total_Price, Seller);
-
-    -- Commit transaction
-    COMMIT;
-
-END$$
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `beginning_inventory`
 --
@@ -100,7 +17,8 @@ CREATE TABLE `beginning_inventory` (
   `Unit_Price` int(11) DEFAULT NULL,
   `Total_Price` int(11) DEFAULT NULL,
   `Date` date DEFAULT NULL,
-  `Color` varchar(255) NOT NULL
+  `Color` varchar(255) NOT NULL,
+  `isImported` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -113,7 +31,8 @@ CREATE TABLE `inventory_level` (
   `PID` int(11) DEFAULT NULL,
   `Quantity` int(11) DEFAULT NULL,
   `Date` date DEFAULT NULL,
-  `Color` varchar(255) NOT NULL
+  `Color` varchar(255) NOT NULL,
+  `isImported` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -152,7 +71,8 @@ CREATE TABLE `purchased_inventory` (
   `Description` varchar(255) DEFAULT NULL,
   `Total_Price` int(11) NOT NULL,
   `Seller` varchar(255) DEFAULT NULL,
-  `Color` varchar(255) NOT NULL
+  `Color` varchar(255) NOT NULL,
+  `isImported` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -168,7 +88,8 @@ CREATE TABLE `sales` (
   `Date` date NOT NULL,
   `Description` varchar(255) NOT NULL,
   `Total_Price` int(11) NOT NULL,
-  `Color` varchar(255) NOT NULL
+  `Color` varchar(255) NOT NULL,
+  `isImported` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -291,6 +212,90 @@ ALTER TABLE `purchased_inventory`
 ALTER TABLE `sales`
   ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`PID`) REFERENCES `product` (`PID`);
 COMMIT;
+
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `HandleSale` (IN `product_id` INT, IN `sale_quantity` INT, IN `sale_date` DATETIME, IN `Description` VARCHAR(255), IN `Unit_Price` DECIMAL(10,2), IN `customer_name` VARCHAR(255), IN `color` VARCHAR(25), IN `isimported` BOOLEAN)   BEGIN
+    DECLARE current_quantity INT;
+    DECLARE Total_Price DECIMAL(10, 2);
+
+    -- Calculate the total price
+    SET Total_Price = sale_quantity * Unit_Price;
+
+    -- Start transaction
+    START TRANSACTION;
+
+    -- Get the current quantity from inventory_level
+    SELECT Quantity INTO current_quantity
+    FROM inventory_level
+    WHERE PID = product_id AND Color = color AND isImported = isimported
+    FOR UPDATE;
+
+    -- Check if sufficient quantity is available
+    IF current_quantity IS NULL THEN
+        -- Product does not exist in inventory_level
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product does not exist in inventory_level';
+    ELSEIF current_quantity < sale_quantity THEN
+        -- Insufficient quantity
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity in inventory_level';
+    ELSE
+        -- Insert into sales table
+        INSERT INTO sales (PID, Quantity, Date, Description, Unit_price, Customer_Name, Total_Price, Color, isImported)
+        VALUES (product_id, sale_quantity, sale_date, Description, Unit_Price, customer_name, Total_Price, color, isimported);
+
+        -- Update inventory_level table
+        UPDATE inventory_level
+        SET Quantity = Quantity - sale_quantity, Date = NOW()
+        WHERE PID = product_id AND Color = color AND isImported = isimported;
+
+        -- Commit transaction
+        COMMIT;
+    END IF;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateInventory` (IN `product_id` INT, IN `purchase_quantity` INT, IN `Invoice_No` VARCHAR(255), IN `Unit_Price` DECIMAL(10,2), IN `Description` VARCHAR(255), IN `Seller` VARCHAR(255), IN `Purchase_Date` DATETIME, IN `color` VARCHAR(25), IN `isimported` BOOLEAN)   BEGIN
+    DECLARE Total_Price DECIMAL(10, 2);
+
+    -- Calculate the total price
+    SET Total_Price = purchase_quantity * Unit_Price;
+
+    -- Start transaction
+    START TRANSACTION;
+
+    -- Lock the inventory_level table to prevent other writes
+    SELECT * FROM inventory_level WHERE PID = product_id AND Color = color AND isImported = isimported FOR UPDATE;
+
+    -- Check if the product exists in inventory_level
+    IF EXISTS (SELECT 1 FROM inventory_level WHERE PID = product_id AND Color = color AND isImported = isimported) THEN
+        -- Update Inventory_Level table
+        UPDATE inventory_level
+        SET Quantity = Quantity + purchase_quantity, Date = NOW()
+        WHERE PID = product_id AND Color = color AND isImported = isimported;
+    ELSE
+        -- Insert the product into inventory_level if it does not exist
+        INSERT INTO inventory_level (PID, Quantity, Date, Color, isImported)
+        VALUES (product_id, purchase_quantity, NOW(), color, isimported);
+    END IF;
+
+    -- Insert into Purchased_Inventory table
+    INSERT INTO purchased_inventory (PID, Quantity, Invoice_No, Unit_Price, Date, Description, Total_Price, Seller, Color, isImported)
+    VALUES (product_id, purchase_quantity, Invoice_No, Unit_Price, Purchase_Date, Description, Total_Price, Seller, color, isimported);
+
+    -- Commit transaction
+    COMMIT;
+
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

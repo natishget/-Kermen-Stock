@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation, Link } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import logo from "../assets/kermen_logo.png";
 import icon_logout from "../assets/icons/logout.svg";
 import NavSide from "./NavSide";
@@ -12,10 +18,17 @@ import Develop from "../components//pages/InventoryLevel";
 import Cart from "./pages/Cart";
 import CartImg from "../assets/icons/cart.svg";
 
+import axios from "axios";
+
 const Pages = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   console.log(location.pathname);
   const [currentPath, setCurrentPath] = useState("");
+  const [loginUserData, setLoginUserData] = useState();
+
+  // axios credentials
+  axios.defaults.withCredentials = true;
   useEffect(() => {
     if (location.pathname === "/pages/") {
       setCurrentPath("Home");
@@ -36,7 +49,35 @@ const Pages = () => {
     }
   }, [location.pathname]);
 
-  console.log(currentPath);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8800/api/auth/protectedRoute`
+        );
+        console.log("response", response.data);
+        setLoginUserData(response.data);
+      } catch (error) {
+        console.log("error", error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8800/api/auth/logout",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="bg-mybg h-screen w-full text-white overflow-hidden">
@@ -54,10 +95,13 @@ const Pages = () => {
               className="fill-yellow-500 mr-6 w-8"
             />
           </Link>
-          <Link to="/" className="flex justify-center items-center">
+          <div
+            className="flex justify-center items-center"
+            onClick={handleLogout}
+          >
             Logout
             <img src={icon_logout} alt="Kermen logo" className="w-10 p-2" />
-          </Link>
+          </div>
         </div>
       </header>
 
@@ -65,7 +109,7 @@ const Pages = () => {
         <NavSide />
         {/* <BrowserRouter> */}
         <Routes>
-          <Route index path="/" element={<Home />} />
+          <Route index path="/" element={<Home userData={loginUserData} />} />
           <Route exact path="sell" element={<Sell />} />
           <Route path="buy" element={<Buy />} />
           <Route path="purchase" element={<Purchase />} />

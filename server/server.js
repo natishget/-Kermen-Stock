@@ -5,6 +5,7 @@ import salesRoute from "./routes/sales.route.js";
 import purchaseRoute from "./routes/purchase.route.js";
 import inventoryRoute from "./routes/inventory.route.js";
 import allDataRoute from "./routes/allData.route.js";
+import cookieParser from "cookie-parser";
 
 import bcrypt from "bcrypt";
 
@@ -20,6 +21,9 @@ app.use(
     credentials: true, // Allows cookies and other credentials
   })
 );
+
+app.use(cookieParser()); // used to set cookie in admin client web browser
+
 app.use("/api/auth", authRoute);
 app.use("/api/sales", salesRoute);
 app.use("/api/purchase", purchaseRoute);

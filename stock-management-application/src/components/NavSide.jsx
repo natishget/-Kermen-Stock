@@ -14,9 +14,6 @@ const NavSide = () => {
   let att =
     "pl-4 pt-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
   let att2 = "pl-4 pt-2 flex ";
-  const LinkChanger = (value1) => {
-    setValue(value1);
-  };
 
   useEffect(() => {
     switch (location.pathname) {
@@ -70,6 +67,10 @@ const NavSide = () => {
         <Link to="/pages/inventory" className={value === 6 ? att : att2}>
           <img src={icon_level} alt="" className="w-6 pr-3" />
           Invetory Level
+        </Link>
+        <Link to="" className={value === 7 ? att : att2}>
+          <img src={icon_level} alt="" className="w-6 pr-3" />
+          COGS
         </Link>
       </div>
     </>

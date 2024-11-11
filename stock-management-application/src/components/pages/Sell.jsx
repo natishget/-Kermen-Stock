@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import sell from "../../assets/sell.png";
 import cart from "../../assets/icons/cart.svg";
@@ -7,13 +7,14 @@ import { CartContext } from "../CartContext";
 const Sell = () => {
   const { addToCart } = useContext(CartContext);
   const [data, setData] = useState({
-    product_id: "0",
+    product_id: "1",
     quantity: "",
     date: "",
     description: "",
     unit_price: "",
     customer: "",
     color: "",
+    isimported: 1,
   });
 
   const handleSubmit = (e) => {
@@ -53,6 +54,13 @@ const Sell = () => {
       addToCart(data);
       alert("Item added to cart");
     }
+  };
+
+  const handleOptionChange = (e) => {
+    console.log("checkbox clicked");
+    data.isImported === 1
+      ? setData({ ...data, isimported: 0 })
+      : setData({ ...data, isimported: 1 });
   };
 
   return (
@@ -132,6 +140,7 @@ const Sell = () => {
             required
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
+
           <br />
           <label htmlFor="customer" className="text-xs pt-28">
             Customer Name /Optional/
@@ -157,6 +166,19 @@ const Sell = () => {
             id="description"
             required
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border-2 rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+          />
+          <br />
+
+          <label htmlFor="isImported" className="text-xs">
+            Imported
+          </label>
+          <input
+            type="radio"
+            onClick={handleOptionChange}
+            checked={data.isimported === 1}
+            name="isImported"
+            id="isImported"
+            className=" border-white border rounded-2xl bg-mybg  w-11/12 "
           />
           <br />
           {/* <button
