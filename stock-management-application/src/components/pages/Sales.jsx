@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import DialogForSalesEdit from "../DialogBox/DialogForSalesEdit";
 
 const data = [
   {
@@ -76,6 +77,7 @@ const Sales = () => {
   const [allSales, setAllSales] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editedSale, setEditedSale] = useState({
+    SID: "",
     PID: "",
     Quantity: "",
     Unit_price: 10,
@@ -130,6 +132,7 @@ const Sales = () => {
         accessorKey: "isImported",
         header: "Imported",
         size: 70,
+        Cell: ({ cell }) => (cell.getValue() === 1 ? "YES" : "NO"),
       },
     ],
     []
@@ -232,12 +235,39 @@ const Sales = () => {
   const handleEditedSale = (e) => {
     const { name, value } = e.target;
     setEditedSale({ ...editedSale, [name]: value });
-    console.log(name + value);
   };
 
   const handleChange = (e) => {
     setEdit({ ...edit, [e.target.name]: e.target.value });
     console.log(e.target.name + e.target.value + "\n" + edit);
+  };
+
+  const handleEditSales = async () => {
+    try {
+      const response = axios.post(
+        `http://localhost:8800/api/sales/updateSales`,
+        editedSale
+      );
+      console.log(response);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleDeleteSales = async (SID) => {
+    console.log("sid", SID);
+    const data = {
+      SID: SID,
+    };
+    try {
+      const response = await axios.post(
+        `http://localhost:8800/api/sales/deleteSales`,
+        data
+      );
+      alert("Sales Deleted");
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   const formatDate = (datetimeString) => {
@@ -256,61 +286,6 @@ const Sales = () => {
   return (
     <>
       <div className="col-span-4 row-span-3 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
-        {/* <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mb-16">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Product Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Quantity
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Sales Date
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Description
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Price
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Customer
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {allSales.length === 0 ? (
-              <tr className="border-b bg-mybg dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  No sales were made
-                </th>
-              </tr>
-            ) : (
-              allSales.map((sale, index) => (
-                <tr
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {sale.Product_name}
-                  </th>
-                  <td className="px-6 py-4">{sale.Quantity}</td>
-                  <td className="px-6 py-4">{formatDate(sale.Date)}</td>
-                  <td className="px-6 py-4">{sale.Description}</td>
-                  <td className="px-6 py-4">{sale.Unit_price} Br</td>
-                  <td className="px-6 py-4">{sale.Customer_Name}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table> */}
         <div className="bg-black">
           <ThemeProvider theme={tableTheme}>
             <MaterialReactTable
@@ -333,6 +308,7 @@ const Sales = () => {
                     onClick={() => {
                       console.log(row.original);
                       setEditedSale({
+                        SID: row.original.SID,
                         PID: row.original.PID,
                         Quantity: row.original.Quantity,
                         Unit_price: row.original.Unit_price,
@@ -344,131 +320,12 @@ const Sales = () => {
                       });
                     }}
                   >
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <EditIcon sx={{ color: "#2a9eb8" }} />
-
-                        {/* Using a Button as the trigger for clarity */}
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Edit profile</DialogTitle>
-                          <DialogDescription>
-                            Make changes to your profile here. Click save when
-                            you&apos;re done.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="prod_name" className="text-right">
-                              Product Name:
-                            </Label>
-                            <select
-                              name="dere"
-                              id="prod_name"
-                              onChange={handleChange}
-                              className=" col-span-3 py-2 px-1 border-[1px] border-slate-200 rounded-md"
-                            >
-                              <option value="1">Aluminium panel: 001</option>
-                              <option value="2">Rail: 002</option>
-                              <option value="0">Aluminium plate: 000</option>
-                            </select>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="Quantity" className="text-right">
-                              Quantity:
-                            </Label>
-                            <Input
-                              name="Quantity"
-                              value={editedSale.Quantity}
-                              id="Quantity"
-                              type="number"
-                              className="col-span-3"
-                              onChange={(e) => {
-                                handleEditedSale(e);
-                              }}
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="Date" className="text-right">
-                              Date:
-                            </Label>
-                            <Input
-                              name="Date"
-                              value={editedSale.Date}
-                              id="Date"
-                              type="date"
-                              className="col-span-3"
-                              onChange={(e) => {
-                                handleEditedSale(e);
-                              }}
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Description:
-                            </Label>
-                            <Input
-                              name="Description"
-                              value={editedSale.Description}
-                              id="Description"
-                              className="col-span-3"
-                              onChange={(e) => {
-                                handleEditedSale(e);
-                              }}
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Price:
-                            </Label>
-                            <Input
-                              name="Unit_price"
-                              onChange={(e) => {
-                                handleEditedSale(e);
-                              }}
-                              value={editedSale.Unit_price}
-                              id="username"
-                              type="number"
-                              className="col-span-3"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="Customer_Name"
-                              className="text-right"
-                            >
-                              Customer:
-                            </Label>
-                            <Input
-                              name="Customer_Name"
-                              value={editedSale.Customer_Name}
-                              id="Customer_Name"
-                              className="col-span-3"
-                              onChange={(e) => {
-                                handleEditedSale(e);
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button
-                            onClick={() => {
-                              console.log(editedSale);
-                            }}
-                            type="submit"
-                          >
-                            Update
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                    <DialogForSalesEdit salesData={row.original.SID} />
                   </IconButton>
                   <IconButton
                     color="error"
                     onClick={() => {
-                      data.splice(row.index, 1); //assuming simple data table
-                      setAllSales([...data]);
+                      handleDeleteSales(row.original.SID);
                     }}
                   >
                     <DeleteIcon sx={{ color: "#d44c3d" }} />

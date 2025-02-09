@@ -6,6 +6,7 @@ import {
   Link,
   useNavigate,
 } from "react-router-dom";
+import DialogForAddProduct from "./DialogBox/DialogForAddProduct";
 import logo from "../assets/kermen_logo.png";
 import icon_logout from "../assets/icons/logout.svg";
 import NavSide from "./NavSide";
@@ -16,6 +17,7 @@ import Purchase from "../components/pages/purchase";
 import Sales from "../components/pages/Sales";
 import Develop from "../components//pages/InventoryLevel";
 import Cart from "./pages/Cart";
+import COGS from "./pages/COGS";
 import CartImg from "../assets/icons/cart.svg";
 
 import axios from "axios";
@@ -88,6 +90,7 @@ const Pages = () => {
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
         <div className="flex justify-center items-center">
+          <DialogForAddProduct />
           <Link to="/pages/cart">
             <img
               src={CartImg}
@@ -116,6 +119,7 @@ const Pages = () => {
           <Route path="sales" element={<Sales />} />
           <Route path="inventory" element={<Develop />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="cogs" element={<COGS />} />
         </Routes>
         {/* </BrowserRouter>  */}
       </div>

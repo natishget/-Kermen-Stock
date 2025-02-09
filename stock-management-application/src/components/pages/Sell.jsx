@@ -5,6 +5,8 @@ import cart from "../../assets/icons/cart.svg";
 import { CartContext } from "../CartContext";
 
 const Sell = () => {
+  axios.defaults.withCredentials = true;
+
   const { addToCart } = useContext(CartContext);
   const [data, setData] = useState({
     product_id: "1",
@@ -16,6 +18,29 @@ const Sell = () => {
     color: "",
     isimported: 1,
   });
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    if (
+      sessionStorage.getItem("products") === null ||
+      sessionStorage.getItem("products") === undefined
+    ) {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8800/api/product/getProducts`
+          );
+          sessionStorage.setItem("products", JSON.stringify(response.data));
+          setProducts(response.data);
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+      fetchProducts();
+    } else {
+      setProducts(JSON.parse(sessionStorage.getItem("products")));
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -84,9 +109,9 @@ const Sell = () => {
             onChange={handleChange}
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           >
-            <option value="1">Aluminium panel: 001</option>
-            <option value="2">Rail: 002</option>
-            <option value="0">Aluminium plate: 000</option>
+            {products.map((product) => (
+              <option value={product?.PID}>{product?.Product_name}</option>
+            ))}
           </select>
           <br />
           <label htmlFor="" className="text-xs mt-16">

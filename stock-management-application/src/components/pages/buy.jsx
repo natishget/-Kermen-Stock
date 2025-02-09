@@ -14,6 +14,29 @@ const Buy = () => {
     color: "",
     isimported: 1,
   });
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    if (
+      sessionStorage.getItem("products") === null ||
+      sessionStorage.getItem("products") === undefined
+    ) {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8800/api/product/getProducts`
+          );
+          sessionStorage.setItem("products", JSON.stringify(response.data));
+          setProducts(response.data);
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+      fetchProducts();
+    } else {
+      setProducts(JSON.parse(sessionStorage.getItem("products")));
+    }
+  }, []);
 
   const handleSubmit = () => {
     if (
@@ -81,9 +104,9 @@ const Buy = () => {
             className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           >
-            <option value="0">Aluminium plate: 000</option>
-            <option value="1">Aluminium Panel: 001</option>
-            <option value="2">Hand Rail: 002</option>
+            {products.map((product, index) => (
+              <option value={product.PID}>{product?.Product_name}</option>
+            ))}
           </select>
           <br />
           <label htmlFor="quantity" className="text-xs pt-28">
