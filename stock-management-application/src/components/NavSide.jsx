@@ -68,7 +68,7 @@ const NavSide = () => {
           <img src={icon_level} alt="" className="w-6 pr-3" />
           Invetory Level
         </Link>
-        <Link to="" className={value === 7 ? att : att2}>
+        <Link to="/pages/cogs" className={value === 7 ? att : att2}>
           <img src={icon_level} alt="" className="w-6 pr-3" />
           COGS
         </Link>

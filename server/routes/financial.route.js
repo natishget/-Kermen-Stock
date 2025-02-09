@@ -1,10 +1,9 @@
 import express from "express";
-import { getAllDataHandler } from "../controller/allData.controller.js";
-
 import { authenticateAccessToken } from "../middleware/authenticateToken.js";
+import { calculateCOGSAndProfit } from "../controller/financial.controller.js";
 
 const router = express.Router();
 
-router.get("/allData", authenticateAccessToken, getAllDataHandler);
+router.get("/financialData", calculateCOGSAndProfit);
 
 export default router;

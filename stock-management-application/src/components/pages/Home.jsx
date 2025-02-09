@@ -5,10 +5,10 @@ import LineChart from "../charts/LineGraph";
 import axios from "axios";
 
 const Home = ({ userData }) => {
-  const [homeData, setHomeData] = useState([]);
   //axios credentials
   axios.defaults.withCredentials = true;
   // protected Route
+  const [homeData, setHomeData] = useState([]);
 
   useEffect(() => {
     axios

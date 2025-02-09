@@ -118,3 +118,62 @@ export const makeSalesHandler = async (req, res) => {
     return res.json({ message: err.sqlMessage });
   }
 };
+
+export const handleEditSales = async (req, res) => {
+  const {
+    SID,
+    PID,
+    Quantity,
+    Unit_price,
+    Customer_Name,
+    Date,
+    Description,
+    Color,
+    isImported,
+  } = req.body;
+  console.log(
+    SID,
+    PID,
+    Quantity,
+    Unit_price,
+    Customer_Name,
+    Date,
+    Description,
+    Color,
+    isImported
+  );
+  try {
+    const [rows] = await pool.query(
+      "UPDATE sales SET PID = ?, Quantity = ?, Unit_price = ?, Customer_Name = ?, Date = ?, Description = ?, Total_Price = ?, Color = ?, isImported = ? WHERE SID = ?",
+      [
+        PID,
+        Quantity,
+        Unit_price,
+        Customer_Name,
+        Date,
+        Description,
+        Quantity * Unit_price,
+        Color.toUpperCase(),
+        isImported,
+        SID,
+      ]
+    );
+    res.json({ message: "Sales Edited" });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};
+
+export const handleDeleteSales = async (req, res) => {
+  const salesId = req.body;
+
+  console.log(salesId.SID);
+  try {
+    const [rows] = await pool.query("DELETE FROM sales WHERE SID = ?", [
+      salesId.SID,
+    ]);
+    res.json({ message: "Sales Deleted" });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};

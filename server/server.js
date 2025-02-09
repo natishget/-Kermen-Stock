@@ -5,6 +5,8 @@ import salesRoute from "./routes/sales.route.js";
 import purchaseRoute from "./routes/purchase.route.js";
 import inventoryRoute from "./routes/inventory.route.js";
 import allDataRoute from "./routes/allData.route.js";
+import financialRoute from "./routes/financial.route.js";
+import productRoute from "./routes/product.route.js";
 import cookieParser from "cookie-parser";
 
 import bcrypt from "bcrypt";
@@ -29,6 +31,8 @@ app.use("/api/sales", salesRoute);
 app.use("/api/purchase", purchaseRoute);
 app.use("/api/inventory", inventoryRoute);
 app.use("/api/getData", allDataRoute);
+app.use("/api/financial", financialRoute);
+app.use("/api/product", productRoute);
 
 app.listen(8800, () => {
   console.log("Connected to backend on port 8800.");
