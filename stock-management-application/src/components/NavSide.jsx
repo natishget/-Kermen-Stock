@@ -1,15 +1,18 @@
 // Navside.jsx
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import icon_home from "../assets/icons/house-solid.svg";
 import icon_purchase from "../assets/icons/purchase.svg";
 import icon_sales from "../assets/icons/sales.svg";
 import icon_buy from "../assets/icons/buy.svg";
 import icon_level from "../assets/icons/level.svg";
 import icon_sell from "../assets/icons/sell.svg";
+import icon_logout from "../assets/icons/logout.svg";
+import axios from "axios";
 
 const NavSide = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [value, setValue] = useState(1);
   let att =
     "pl-4 pt-5 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
@@ -41,9 +44,24 @@ const NavSide = () => {
     }
   }, [location.pathname]);
 
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8800/api/auth/logout",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
-    <>
-      <div className="w-[20%] bg-mycolor text-white  flex-col justify-center font-bold text-lg">
+    <div className="w-[20%] h-full bg-mycolor text-white  flex-col justify-between font-bold text-lg">
+      <div className="">
         <Link to="/pages/" className={value === 1 ? att : att2}>
           <img src={icon_home} alt="" className="w-8 pr-3" />
           Home
@@ -73,7 +91,14 @@ const NavSide = () => {
           COGS
         </Link>
       </div>
-    </>
+      <div
+        className="flex justify-center items-center cursor-pointer"
+        onClick={handleLogout}
+      >
+        Logout
+        <img src={icon_logout} alt="Kermen logo" className="w-10 p-2" />
+      </div>
+    </div>
   );
 };
 

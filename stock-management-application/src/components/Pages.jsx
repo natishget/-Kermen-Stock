@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import DialogForAddProduct from "./DialogBox/DialogForAddProduct";
 import logo from "../assets/kermen_logo.png";
-import icon_logout from "../assets/icons/logout.svg";
+import Cart_png from "../assets/shopping-cart.png";
 import NavSide from "./NavSide";
 import Home from "../components/pages/Home";
 import Sell from "./pages/Sell";
@@ -92,19 +92,8 @@ const Pages = () => {
         <div className="flex justify-center items-center">
           <DialogForAddProduct />
           <Link to="/pages/cart">
-            <img
-              src={CartImg}
-              alt="cart"
-              className="fill-yellow-500 mr-6 w-8"
-            />
+            <img src={Cart_png} alt="cart" className=" mr-6 w-8" />
           </Link>
-          <div
-            className="flex justify-center items-center"
-            onClick={handleLogout}
-          >
-            Logout
-            <img src={icon_logout} alt="Kermen logo" className="w-10 p-2" />
-          </div>
         </div>
       </header>
 
