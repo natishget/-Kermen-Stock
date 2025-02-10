@@ -43,7 +43,7 @@ export const makePurchaseHandler = async (req, res) => {
         description,
         seller,
         date,
-        color,
+        color.toUpperCase(),
         isimported,
       ]
     );
@@ -51,5 +51,65 @@ export const makePurchaseHandler = async (req, res) => {
     return res.json("1");
   } catch (error) {
     console.error(error.message);
+  }
+};
+
+export const handleEditPurchase = async (req, res) => {
+  const {
+    PIID,
+    PID,
+    Quantity,
+    Unit_Price,
+    Seller,
+    Date,
+    Description,
+    Color,
+    isImported,
+  } = req.body;
+  console.log(
+    PIID,
+    PID,
+    Quantity,
+    Unit_Price,
+    Seller,
+    Date,
+    Description,
+    Color,
+    isImported
+  );
+  try {
+    const [rows] = await pool.query(
+      "UPDATE sales SET PID = ?, Quantity = ?, Unit_Price = ?, Seller = ?, Date = ?, Description = ?, Total_Price = ?, Color = ?, isImported = ? WHERE PIID = ?",
+      [
+        PID,
+        Quantity,
+        Unit_Price,
+        Seller,
+        Date,
+        Description,
+        Quantity * Unit_Price,
+        Color.toUpperCase(),
+        isImported,
+        PIID,
+      ]
+    );
+    res.json({ message: "Purchase Edited" });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};
+
+export const handleDeletePurchase = async (req, res) => {
+  const salesId = req.body;
+
+  console.log(salesId.SID);
+  try {
+    const [rows] = await pool.query(
+      "DELETE FROM puchase_inventory WHERE PIID = ?",
+      [puchaseId.PIID]
+    );
+    res.json({ message: "Sales Deleted" });
+  } catch (error) {
+    res.json({ message: error.message });
   }
 };

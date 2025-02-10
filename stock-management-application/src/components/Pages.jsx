@@ -82,9 +82,9 @@ const Pages = () => {
   };
 
   return (
-    <div className="bg-mybg h-screen w-full text-white overflow-hidden">
-      <header className="bg-mycolor flex justify-between">
-        <img src={logo} alt="Kermen logo" className="w-32 p-2" />
+    <div className="bg-mybg h-screen w-full text-white overflow-hidden ">
+      <header className="bg-mycolor h-[13%] flex justify-between items-center">
+        <img src={logo} alt="Kermen logo" className="w-32 h-16 p-2" />
         <p className="self-center text-white font-bold">
           Stock Management Application -
           <span className="text-yellow-400"> {currentPath}</span>{" "}
@@ -108,7 +108,7 @@ const Pages = () => {
         </div>
       </header>
 
-      <div className="grid grid-cols-5 grid-rows-3 h-full">
+      <div className="flex h-full">
         <NavSide />
         {/* <BrowserRouter> */}
         <Routes>

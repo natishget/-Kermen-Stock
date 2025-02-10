@@ -12,8 +12,8 @@ const NavSide = () => {
   const location = useLocation();
   const [value, setValue] = useState(1);
   let att =
-    "pl-4 pt-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
-  let att2 = "pl-4 pt-2 flex ";
+    "pl-4 pt-5 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
+  let att2 = "pl-4 pt-2 flex pb-2 ";
 
   useEffect(() => {
     switch (location.pathname) {
@@ -43,33 +43,33 @@ const NavSide = () => {
 
   return (
     <>
-      <div className="col-span-1 row-span-3 bg-mycolor text-white  flex-col justify-center font-bold">
+      <div className="w-[20%] bg-mycolor text-white  flex-col justify-center font-bold text-lg">
         <Link to="/pages/" className={value === 1 ? att : att2}>
-          <img src={icon_home} alt="" className="w-6 pr-3" />
+          <img src={icon_home} alt="" className="w-8 pr-3" />
           Home
         </Link>
         <Link to="/pages/sales" className={value === 2 ? att : att2}>
-          <img src={icon_sales} alt="" className="w-6 pr-3" />
+          <img src={icon_sales} alt="" className="w-8 pr-3" />
           Sales
         </Link>
         <Link to="/pages/purchase" className={value === 3 ? att : att2}>
-          <img src={icon_purchase} alt="" className="w-6 pr-3" />
+          <img src={icon_purchase} alt="" className="w-8 pr-3" />
           Purchase
         </Link>
         <Link to="/pages/sell" className={value === 4 ? att : att2}>
-          <img src={icon_sell} alt="" className="w-6 pr-3" />
+          <img src={icon_sell} alt="" className="w-8 pr-3" />
           Sell Now
         </Link>
         <Link to="/pages/buy" className={value === 5 ? att : att2}>
-          <img src={icon_buy} alt="" className="w-6 pr-3" />
+          <img src={icon_buy} alt="" className="w-8 pr-3 " />
           Buy Now
         </Link>
         <Link to="/pages/inventory" className={value === 6 ? att : att2}>
-          <img src={icon_level} alt="" className="w-6 pr-3" />
+          <img src={icon_level} alt="" className="w-8 pr-3" />
           Invetory Level
         </Link>
         <Link to="/pages/cogs" className={value === 7 ? att : att2}>
-          <img src={icon_level} alt="" className="w-6 pr-3" />
+          <img src={icon_level} alt="" className="w-8 pr-3" />
           COGS
         </Link>
       </div>

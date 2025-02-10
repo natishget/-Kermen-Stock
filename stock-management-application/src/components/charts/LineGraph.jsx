@@ -23,7 +23,7 @@ ChartJS.register(
 
 const LineGraph = () => {
   const options = {};
-  return <Line options={options} data={lineChartData} />;
+  return <Line options={options} data={lineChartData} className="w-[50%] " />;
 };
 
 export default LineGraph;

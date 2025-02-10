@@ -89,7 +89,7 @@ const Sell = () => {
   };
 
   return (
-    <div className=" w-full mb-2 col-span-4 row-span-3 overflow-hidden md:no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
+    <div className=" w-full mb-2 overflow-hidden md:no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
       <div className="w-full mt-24 md:pt-28 ">
         <form
           action=""

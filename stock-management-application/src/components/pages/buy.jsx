@@ -82,7 +82,7 @@ const Buy = () => {
   };
 
   return (
-    <div className="col-span-4 row-span-3 overflow-hidden no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
+    <div className="w-full overflow-hidden no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
       <div className="w-full mt-24 md:pt-28 pt-0">
         <form
           action=""
