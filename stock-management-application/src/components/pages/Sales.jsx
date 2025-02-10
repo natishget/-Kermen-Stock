@@ -320,7 +320,7 @@ const Sales = () => {
                       });
                     }}
                   >
-                    <DialogForSalesEdit salesData={row.original.SID} />
+                    <DialogForSalesEdit salesData={row.original} />
                   </IconButton>
                   <IconButton
                     color="error"
