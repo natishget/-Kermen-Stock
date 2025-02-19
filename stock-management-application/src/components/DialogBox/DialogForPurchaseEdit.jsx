@@ -21,6 +21,9 @@ import { Label } from "@/components/ui/label";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const DialogForPurchaseEdit = ({ PurchaseData }) => {
   const [editedPurchase, setEditedPurchase] = useState({
     PIID: PurchaseData?.PIID,
@@ -48,9 +51,7 @@ const DialogForPurchaseEdit = ({ PurchaseData }) => {
     ) {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:8800/api/product/getProducts`
-          );
+          const response = await axios.get(`${BackEndURL}/product/getProducts`);
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
         } catch (error) {
@@ -96,7 +97,7 @@ const DialogForPurchaseEdit = ({ PurchaseData }) => {
         throw new Error("Every field on the form should be properly field");
       }
       const response = axios.post(
-        `http://localhost:8800/api/purchase/editPurchase`,
+        `${BackEndURL}/purchase/editPurchase`,
         editedPurchase
       );
       alert("Purchase Edited");

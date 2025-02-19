@@ -13,6 +13,9 @@ import {
 } from "@mui/icons-material";
 import DialogForPurchaseEdit from "../DialogBox/DialogForPurchaseEdit";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const Purchase = () => {
   const [allPurchases, setAllPurchases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -145,7 +148,7 @@ const Purchase = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8800/api/purchase/allPurchase`)
+      .get(`${BackEndURL}/purchase/allPurchase`)
       .then((res) => {
         console.log(res.data);
         if (res.data.msg != "") setAllPurchases(res.data);
@@ -165,7 +168,7 @@ const Purchase = () => {
     };
     try {
       const response = await axios.post(
-        `http://localhost:8800/api/purchase/deletePurchase`,
+        `${BackEndURL}/purchase/deletePurchase`,
         data
       );
       alert("Purchase Deleted");

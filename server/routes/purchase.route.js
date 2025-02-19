@@ -4,12 +4,13 @@ import {
   handleEditPurchase,
   makePurchaseHandler,
 } from "../controller/purchase.controller.js";
+import { authenticateAccessToken } from "../middleware/authenticateToken.js";
 
 const router = express.Router();
 
-router.get("/allPurchase", allPurchaseHandler);
-router.post("/makePurchase", makePurchaseHandler);
-router.post("/editPurchase", handleEditPurchase);
-router.post("/deletePurchase", handleEditPurchase);
+router.get("/allPurchase", authenticateAccessToken, allPurchaseHandler);
+router.post("/makePurchase", authenticateAccessToken, makePurchaseHandler);
+router.post("/editPurchase", authenticateAccessToken, handleEditPurchase);
+router.post("/deletePurchase", authenticateAccessToken, handleEditPurchase);
 
 export default router;

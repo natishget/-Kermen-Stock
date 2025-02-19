@@ -4,6 +4,9 @@ import Card2 from "../Card2";
 import LineChart from "../charts/LineGraph";
 import axios from "axios";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const Home = ({ userData }) => {
   //axios credentials
   axios.defaults.withCredentials = true;
@@ -12,7 +15,7 @@ const Home = ({ userData }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8800/api/getData/allData`)
+      .get(`${BackEndURL}/getData/allData`)
       .then((res) => {
         setHomeData(res.data);
         console.log(homeData);

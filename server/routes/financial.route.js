@@ -4,6 +4,6 @@ import { calculateCOGSAndProfit } from "../controller/financial.controller.js";
 
 const router = express.Router();
 
-router.get("/financialData", calculateCOGSAndProfit);
+router.get("/financialData", authenticateAccessToken, calculateCOGSAndProfit);
 
 export default router;

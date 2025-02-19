@@ -4,6 +4,9 @@ import sell from "../../assets/sell.png";
 import cart from "../../assets/icons/cart.svg";
 import { CartContext } from "../CartContext";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const Sell = () => {
   axios.defaults.withCredentials = true;
 
@@ -27,9 +30,7 @@ const Sell = () => {
     ) {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:8800/api/product/getProducts`
-          );
+          const response = await axios.get(`${BackEndURL}/product/getProducts`);
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
         } catch (error) {
@@ -47,7 +48,7 @@ const Sell = () => {
     console.log("sending to backend");
     console.table(data);
     axios
-      .post(`http://localhost:8800/api/sales/makeSales`, data)
+      .post(`${BackEndURL}/sales/makeSales`, data)
       .then((res) => {
         console.log(res.data.messsage);
         if (res.data.message === "Yes") {

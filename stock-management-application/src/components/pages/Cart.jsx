@@ -4,24 +4,18 @@ import { CartContext } from "../CartContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const Cart = () => {
   const navigate = useNavigate();
   const { cart, clearCart } = useContext(CartContext);
 
   const handleSubmit = () => {
     axios
-      .post(`http://localhost:8800/api/sales/makeSales`, cart, {
+      .post(`${BackEndURL}/sales/makeSales`, cart, {
         responseType: "blob", // To handle binary data
       })
-      //   .then((res) => {
-      //     if (res.data.message === "YES") {
-      //       alert("All sales processed successfully");
-      //       clearCart(); // Clear the cart after submitting
-      //     } else throw new Error(res.data.message);
-      //   })
-      //   .catch((err) => {
-      //     alert(err instanceof Error ? err.message : "An error occurred");
-      //   });
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");

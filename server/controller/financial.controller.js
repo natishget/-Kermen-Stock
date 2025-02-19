@@ -78,16 +78,15 @@ export const calculateCOGSAndProfit = async (req, res) => {
       console.log(results);
 
       // Calculate COGS (Cost of Goods Sold)
-      console.log(TotalQuantity * WeightedAvgCostPerUnit);
+      const COGS = TotalQuantity * WeightedAvgCostPerUnit;
 
       // Calculate Revenue
-      console.log(TotalQuantity * SalePricePerUnit);
+      const revenue = TotalQuantity * SalePricePerUnit;
 
       // Calculate Gross Profit
-      console.log(
-        TotalQuantity * SalePricePerUnit -
-          TotalQuantity * WeightedAvgCostPerUnit
-      );
+      const grossProfit = revenue - COGS;
+
+      console.log(COGS, "\n", revenue, "\n", grossProfit);
 
       // Send the response with all the necessary data
       res.json({
@@ -95,9 +94,9 @@ export const calculateCOGSAndProfit = async (req, res) => {
         TotalCost: parseFloat(TotalCost) || 0,
         WeightedAvgCostPerUnit: parseFloat(WeightedAvgCostPerUnit) || 0,
         SalePricePerUnit: parseFloat(SalePricePerUnit) || 0,
-        // COGS: parseFloat(COGS) || 0,
-        // Revenue: revenue.toFixed(2),
-        // GrossProfit: grossProfit.toFixed(2),
+        COGS: parseFloat(COGS) || 0,
+        Revenue: parseFloat(revenue) || 0,
+        GrossProfit: parseFloat(grossProfit) || 0,
       });
     } else {
       res

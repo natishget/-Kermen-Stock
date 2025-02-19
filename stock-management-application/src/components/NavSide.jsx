@@ -10,6 +10,9 @@ import icon_sell from "../assets/icons/sell.svg";
 import icon_logout from "../assets/icons/logout.svg";
 import axios from "axios";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const NavSide = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -46,12 +49,9 @@ const NavSide = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8800/api/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${BackEndURL}/auth/logout`, {
+        withCredentials: true,
+      });
       console.log(response.data);
       navigate("/");
     } catch (error) {

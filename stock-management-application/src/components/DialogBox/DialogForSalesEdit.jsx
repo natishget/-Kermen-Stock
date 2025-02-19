@@ -21,6 +21,9 @@ import { Label } from "@/components/ui/label";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
+// enviroment varibale
+const BAckEndURL = process.env.VITE_BACKEND_URL;
+
 const DialogForSalesEdit = ({ salesData }) => {
   const [editedSale, setEditedSale] = useState({
     SID: salesData?.SID,
@@ -46,9 +49,7 @@ const DialogForSalesEdit = ({ salesData }) => {
     ) {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:8800/api/product/getProducts`
-          );
+          const response = await axios.get(`${BackEndURL}/product/getProducts`);
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
         } catch (error) {
@@ -94,7 +95,7 @@ const DialogForSalesEdit = ({ salesData }) => {
         throw new Error("Every field on the form should be properly field");
       }
       const response = axios.post(
-        `http://localhost:8800/api/sales/updateSales`,
+        `${BackEndURL}/sales/updateSales`,
         editedSale
       );
       alert("Sales Edited");

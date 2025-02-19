@@ -12,16 +12,16 @@ const Login = () => {
   // axios credentials
   axios.defaults.withCredentials = true;
 
+  // enviroment variable
+  const BackEndURL = process.env.VITE_BACKEND_URL;
+
   // protected Route
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8800/api/auth/protectedRoute`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${BackEndURL}/auth/protectedRoute`, {
+          withCredentials: true,
+        });
         navigate("/pages/");
       } catch (error) {
         console.clear();
@@ -41,7 +41,7 @@ const Login = () => {
       alert("Please choose user type");
     } else {
       axios
-        .post("http://localhost:8800/api/auth/login", {
+        .post(`${BackEndURL}/auth/login`, {
           username,
           password,
           isAdmin,

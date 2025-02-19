@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import buy from "../../assets/buy.png";
 
+// enviroment variable
+const BackEndURL = process.env.VITE_BACKEND_URL;
+
 const Buy = () => {
   const [data, setData] = useState({
     product_id: "0",
@@ -23,9 +26,7 @@ const Buy = () => {
     ) {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:8800/api/product/getProducts`
-          );
+          const response = await axios.get(`${BackEndURL}/product/getProducts`);
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
         } catch (error) {
@@ -50,7 +51,7 @@ const Buy = () => {
       alert("Please Fill the form properly");
     else {
       axios
-        .post(`http://localhost:8800/api/purchase/makePurchase`, data)
+        .post(`${BackEndURL}/purchase/makePurchase`, data)
         .then((res) => {
           console.log(res.data);
           if (res.data === "1") {
