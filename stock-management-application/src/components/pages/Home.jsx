@@ -22,6 +22,7 @@ const Home = ({ userData }) => {
             withCredentials: true,
           }
         );
+        console.log("data", response.data);
         setHomeData(response.data);
       } catch (error) {
         if (error.response) {
@@ -37,43 +38,45 @@ const Home = ({ userData }) => {
   }, []);
   return (
     <div className="w-full flex-col overflow-hidden md:no-scrollbar hover:overflow-y-scroll">
-      {homeData.length === 0 ? (
-        <div className="w-full flex mt-5">
-          <Card name={"Sales"} value={"0Br"} />
+      <div className="w-full flex mt-5 justify-around">
+        <Card
+          name={"Sales"}
+          value={homeData?.totalSalesPrice + " Br"}
+          type={"1"}
+        />
 
-          <Card name={"Number of Sales"} value={"0"} />
+        <Card
+          name={"Number of Sales"}
+          value={homeData?.salesCount}
+          type={"2"}
+        />
 
-          <Card name={"Purchase"} value={"0Br"} />
+        <Card
+          name={"Purchase"}
+          value={homeData?.combinedTotalPurchasedPrice + " Br"}
+          type={"3"}
+        />
 
-          <Card name={"Number of Purchase"} value={"0"} />
+        <Card
+          name={"Number of Purchase"}
+          value={homeData?.combinedPurchasedInventoryCount}
+          type={"4"}
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <div className="w-[48%] h-[50%] mt-14">
+          <LineChart
+            fullData={homeData?.monthlySales || []}
+            type={"Monthly Sales"}
+          />
         </div>
-      ) : (
-        homeData.map((home, index) => (
-          <div className="w-full flex mt-5 justify-around" key={index}>
-            <Card
-              name={"Sales"}
-              value={home.totalSalesPrice + " Br"}
-              type={"1"}
-            />
-
-            <Card name={"Number of Sales"} value={home.salesCount} type={"2"} />
-
-            <Card
-              name={"Purchase"}
-              value={home.combinedTotalPurchasedPrice + " Br"}
-              type={"3"}
-            />
-
-            <Card
-              name={"Number of Purchase"}
-              value={home.combinedPurchasedInventoryCount}
-              type={"4"}
-            />
-          </div>
-        ))
-      )}
-      <div className="w-full  mt-14 flex justify-center items-center">
-        <LineChart />
+        <div className="w-[48%] h-[50%] mt-14">
+          <LineChart
+            fullData={homeData?.monthlyPurchases || []}
+            type={"Monthly Purchases"}
+          />
+        </div>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const NavSide = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
   let att =
-    "pl-4 pt-5 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
+    "pl-4 pt-2 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
   let att2 = "pl-4 pt-2 flex pb-2 ";
 
   useEffect(() => {

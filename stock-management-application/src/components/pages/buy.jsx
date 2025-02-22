@@ -45,7 +45,7 @@ const Buy = () => {
     }
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       data.quantity === "" ||
       data.date === "" ||
@@ -56,19 +56,22 @@ const Buy = () => {
     )
       alert("Please Fill the form properly");
     else {
-      axios
-        .post(`${BackEndURL}/purchase/makePurchase`, data)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data === "1") {
-            alert("successfully purchased");
-            window.location.reload();
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("something wrong please trying again after refreshing");
-        });
+      console.log("data", data);
+      try {
+        const response = await axios.post(
+          `${BackEndURL}/purchase/makePurchase`,
+          data,
+          { withCredentials: true }
+        );
+
+        console.log(response.data);
+        if (response.data === "1") {
+          alert("successfully purchased");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("something wrong please trying again after refreshing");
+      }
     }
   };
 
