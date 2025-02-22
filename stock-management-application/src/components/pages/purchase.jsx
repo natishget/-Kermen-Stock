@@ -13,6 +13,9 @@ import {
 } from "@mui/icons-material";
 import DialogForPurchaseEdit from "../DialogBox/DialogForPurchaseEdit";
 
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
+
 const Purchase = () => {
   const [allPurchases, setAllPurchases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -144,19 +147,25 @@ const Purchase = () => {
   );
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8800/api/purchase/allPurchase`)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.msg != "") setAllPurchases(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("there is something wrong please trying again");
-      })
-      .finally(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BackEndURL}/purchase/allPurchase`, {
+          withCredentials: true,
+        });
+        setAllPurchases(response.data);
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+    fetchData();
   }, []);
 
   const handleDeletePurchase = async (PIID) => {
@@ -165,7 +174,7 @@ const Purchase = () => {
     };
     try {
       const response = await axios.post(
-        `http://localhost:8800/api/purchase/deletePurchase`,
+        `${BackEndURL}/purchase/deletePurchase`,
         data
       );
       alert("Purchase Deleted");

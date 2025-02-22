@@ -21,6 +21,10 @@ import COGS from "./pages/COGS";
 import CartImg from "../assets/icons/cart.svg";
 
 import axios from "axios";
+import DialogForAddUser from "./DialogBox/DialogForAddUser";
+
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Pages = () => {
   const navigate = useNavigate();
@@ -54,32 +58,21 @@ const Pages = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8800/api/auth/protectedRoute`
-        );
+        const response = await axios.get(`${BackEndURL}/auth/protectedRoute`);
         console.log("response", response.data);
         setLoginUserData(response.data);
       } catch (error) {
-        console.log("error", error.message);
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
       }
     };
     fetchData();
   }, []);
-
-  const handleLogout = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8800/api/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response.data);
-      navigate("/");
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   return (
     <div className="bg-mybg h-screen w-full text-white overflow-hidden ">
@@ -90,6 +83,7 @@ const Pages = () => {
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
         <div className="flex justify-center items-center">
+          <DialogForAddUser />
           <DialogForAddProduct />
           <Link to="/pages/cart">
             <img src={Cart_png} alt="cart" className=" mr-6 w-8" />

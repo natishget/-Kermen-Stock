@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import buy from "../../assets/buy.png";
 
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
+
 const Buy = () => {
   const [data, setData] = useState({
     product_id: "0",
@@ -23,13 +26,17 @@ const Buy = () => {
     ) {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:8800/api/product/getProducts`
-          );
+          const response = await axios.get(`${BackEndURL}/product/getProducts`);
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
         } catch (error) {
-          console.log("error", error);
+          if (error.response) {
+            alert(error.response.data.message);
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("Error: " + error.message);
+          }
         }
       };
       fetchProducts();
@@ -38,7 +45,7 @@ const Buy = () => {
     }
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       data.quantity === "" ||
       data.date === "" ||
@@ -49,19 +56,22 @@ const Buy = () => {
     )
       alert("Please Fill the form properly");
     else {
-      axios
-        .post(`http://localhost:8800/api/purchase/makePurchase`, data)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data === "1") {
-            alert("successfully purchased");
-            window.location.reload();
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("something wrong please trying again after refreshing");
-        });
+      console.log("data", data);
+      try {
+        const response = await axios.post(
+          `${BackEndURL}/purchase/makePurchase`,
+          data,
+          { withCredentials: true }
+        );
+
+        console.log(response.data);
+        if (response.data === "1") {
+          alert("successfully purchased");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("something wrong please trying again after refreshing");
+      }
     }
   };
 

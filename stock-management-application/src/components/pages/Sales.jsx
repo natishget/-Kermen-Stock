@@ -11,67 +11,10 @@ import {
   Delete as DeleteIcon,
   Email as EmailIcon,
 } from "@mui/icons-material";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import DialogForSalesEdit from "../DialogBox/DialogForSalesEdit";
 
-const data = [
-  {
-    name: {
-      firstName: "John",
-      lastName: "Doe",
-    },
-    address: "261 Erdman Ford",
-    city: "East Daphne",
-    state: "Kentucky",
-  },
-  {
-    name: {
-      firstName: "Jane",
-      lastName: "Doe",
-    },
-    address: "769 Dominic Grove",
-    city: "Columbus",
-    state: "Ohio",
-  },
-  {
-    name: {
-      firstName: "Joe",
-      lastName: "Doe",
-    },
-    address: "566 Brakus Inlet",
-    city: "South Linda",
-    state: "West Virginia",
-  },
-  {
-    name: {
-      firstName: "Kevin",
-      lastName: "Vandy",
-    },
-    address: "722 Emie Stream",
-    city: "Lincoln",
-    state: "Nebraska",
-  },
-  {
-    name: {
-      firstName: "Joshua",
-      lastName: "Rolluffs",
-    },
-    address: "32188 Larkin Turnpike",
-    city: "Charleston",
-    state: "South Carolina",
-  },
-];
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Sales = () => {
   const [allSales, setAllSales] = useState([]);
@@ -88,7 +31,6 @@ const Sales = () => {
     isImported: "",
   });
   const [edit, setEdit] = useState({ dere: "43" });
-  const [userId, setUserId] = useState(); // This state is not used, so you might consider removing it if it's unnecessary.
 
   const columns = useMemo(
     () => [
@@ -218,18 +160,19 @@ const Sales = () => {
   );
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8800/api/sales/allSales`)
-      .then((res) => {
-        setAllSales(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data.msg);
-      })
-      .finally(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BackEndURL}/sales/allSales`, {
+          withCredentials: true,
+        });
+        setAllSales(response.data);
+      } catch (error) {
+        console.log(error.response.data.msg);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+    fetchData();
   }, []);
 
   const handleEditedSale = (e) => {
@@ -245,10 +188,10 @@ const Sales = () => {
   const handleEditSales = async () => {
     try {
       const response = axios.post(
-        `http://localhost:8800/api/sales/updateSales`,
+        `${BackEndURL}/sales/updateSales`,
         editedSale
       );
-      console.log(response);
+      alert("Sales Updated");
     } catch (error) {
       alert(error.message);
     }
@@ -261,7 +204,7 @@ const Sales = () => {
     };
     try {
       const response = await axios.post(
-        `http://localhost:8800/api/sales/deleteSales`,
+        `${BackEndURL}/sales/deleteSales`,
         data
       );
       alert("Sales Deleted");

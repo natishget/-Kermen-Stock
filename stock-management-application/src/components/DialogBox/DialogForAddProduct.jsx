@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit as EditIcon } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const DialogForAddProduct = () => {
   //axios credentials
@@ -37,7 +39,7 @@ const DialogForAddProduct = () => {
     try {
       console.log("adding");
       const response = await axios.post(
-        `http://localhost:8800/api/product/newProduct`,
+        `${BackEndURL}/product/newProduct`,
         newProduct
       );
       console.log("response", response);
@@ -49,7 +51,7 @@ const DialogForAddProduct = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-myblue text-white rounded-2xl px-4 py-2">
+        <Button className="bg-myblue text-white border border-white px-4 py-2 mr-3">
           Add Product
         </Button>
 

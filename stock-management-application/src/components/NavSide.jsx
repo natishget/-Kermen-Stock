@@ -10,12 +10,15 @@ import icon_sell from "../assets/icons/sell.svg";
 import icon_logout from "../assets/icons/logout.svg";
 import axios from "axios";
 
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
+
 const NavSide = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
   let att =
-    "pl-4 pt-5 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
+    "pl-4 pt-2 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
   let att2 = "pl-4 pt-2 flex pb-2 ";
 
   useEffect(() => {
@@ -46,16 +49,19 @@ const NavSide = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8800/api/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${BackEndURL}/auth/logout`, {
+        withCredentials: true,
+      });
       console.log(response.data);
       navigate("/");
     } catch (error) {
-      alert(error.message);
+      if (error.response) {
+        alert(error.response.data.message);
+      } else if (error.request) {
+        alert("No response from server. Please try again.");
+      } else {
+        alert("Error: " + error.message);
+      }
     }
   };
 

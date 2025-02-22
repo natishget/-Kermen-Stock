@@ -30,18 +30,18 @@ export const loginHandler = async (req, res) => {
         // req.session.userInfo = { isClient: isClient, userData: client };
         // console.log(req.session.userData);
 
-        const token = await generateAccessToken({
+        const token = generateAccessToken({
           userName: admin.User_Name,
           userType: admin.User_Type,
         });
-        console.log("token is:", token);
+
         res.cookie("token", token, {
           httpOnly: false, // only from http not from the javascript
           secure: process.env.NODE_ENV === "production", // check wether it is in production or development
           maxAge: 24 * 60 * 60 * 1000, // token live only for 24 hours
         });
-        console.log("successful");
-        return res.status(200).json({ message: "logged in successfull" });
+        console.log("login successfull");
+        return res.status(200).json({ message: "log in successfull" });
       } else {
         return res.status(400).json({ msg: "Login failed" });
       }
@@ -81,6 +81,33 @@ export const loginHandler = async (req, res) => {
     }
   } catch (error) {
     console.log("error in login handler", error);
+  }
+};
+
+export const createUserHandler = async (req, res) => {
+  const { username, password, isAdmin, adminPass } = req.body;
+  if (adminPass !== "AluKermen") {
+    return res.status(400).json({ message: "Register Password is wrong" });
+  }
+  console.log(username, password, isAdmin);
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+    const [rows] = await pool.query(
+      "SELECT * FROM user_table WHERE User_Name = ?",
+      [username]
+    );
+    if (rows.length > 0) {
+      return res.status(400).json({ message: "User already exist" });
+    } else {
+      await pool.query(
+        "INSERT INTO user_table (User_Name, Password, User_Type) VALUES (?, ?, ?)",
+        [username, hashedPassword, isAdmin ? "admin" : "user"]
+      );
+      res.status(201).json({ message: "User created" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
