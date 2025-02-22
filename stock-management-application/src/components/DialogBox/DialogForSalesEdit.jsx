@@ -22,7 +22,7 @@ import { Edit as EditIcon } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
 // enviroment varibale
-const BAckEndURL = process.env.VITE_BACKEND_URL;
+const BAckEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const DialogForSalesEdit = ({ salesData }) => {
   const [editedSale, setEditedSale] = useState({

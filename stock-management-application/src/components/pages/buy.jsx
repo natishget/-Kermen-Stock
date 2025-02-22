@@ -3,7 +3,7 @@ import axios from "axios";
 import buy from "../../assets/buy.png";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Buy = () => {
   const [data, setData] = useState({
@@ -30,7 +30,13 @@ const Buy = () => {
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
         } catch (error) {
-          console.log("error", error);
+          if (error.response) {
+            alert(error.response.data.message);
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("Error: " + error.message);
+          }
         }
       };
       fetchProducts();

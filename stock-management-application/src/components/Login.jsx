@@ -3,17 +3,14 @@ import cubic from "../assets/cubic1.jpg";
 import axios from "axios"; // Import axios
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
+// enviroment variable
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
-
-  // axios credentials
-  axios.defaults.withCredentials = true;
-
-  // enviroment variable
-  const BackEndURL = process.env.VITE_BACKEND_URL;
 
   // protected Route
   useEffect(() => {
@@ -24,8 +21,14 @@ const Login = () => {
         });
         navigate("/pages/");
       } catch (error) {
-        console.clear();
-        console.log(error.message);
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+        console.log("error", error);
       }
     };
     fetchData();
@@ -35,27 +38,29 @@ const Login = () => {
     setIsAdmin(e.target.value === "true");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isAdmin === null) {
       alert("Please choose user type");
     } else {
-      axios
-        .post(`${BackEndURL}/auth/login`, {
-          username,
-          password,
-          isAdmin,
-        })
-        .then((res) => {
-          const userData = res.data;
-          console.log("userData", userData);
-
-          navigate("/pages");
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Login Failed, check your credentials and try again.");
-        });
+      try {
+        const response = await axios.post(
+          `${BackEndURL}/auth/login`,
+          { username, password, isAdmin },
+          { withCredentials: true }
+        );
+        navigate("/pages");
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+          console.log(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+        console.log("error", error);
+      }
     }
   };
 

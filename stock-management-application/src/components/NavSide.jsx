@@ -11,7 +11,7 @@ import icon_logout from "../assets/icons/logout.svg";
 import axios from "axios";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const NavSide = () => {
   const location = useLocation();
@@ -55,7 +55,13 @@ const NavSide = () => {
       console.log(response.data);
       navigate("/");
     } catch (error) {
-      alert(error.message);
+      if (error.response) {
+        alert(error.response.data.message);
+      } else if (error.request) {
+        alert("No response from server. Please try again.");
+      } else {
+        alert("Error: " + error.message);
+      }
     }
   };
 

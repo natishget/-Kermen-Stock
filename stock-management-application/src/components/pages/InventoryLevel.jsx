@@ -6,33 +6,35 @@ import {
 } from "material-react-table";
 import { createTheme, ThemeProvider, useTheme } from "@mui/material";
 import { Box, IconButton } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Email as EmailIcon,
-} from "@mui/icons-material";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const InventoryLevel = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [inventoryLevel, setInventoryLevel] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${BackEndURL}/inventory/inventoryLevel`)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.msg != "") setInventoryLevel(res.data);
-      })
-      .catch((err) => {
-        alert("look like something is wrong please refersh");
-        console.error(err.message);
-      })
-      .finally(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${BackEndURL}/inventory/inventoryLevel`
+        );
+        console.log(response.data);
+        if (response.data.msg !== "") setInventoryLevel(response.data);
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+    fetchData();
   }, []);
 
   const formatDate = (dataTimeString) => {

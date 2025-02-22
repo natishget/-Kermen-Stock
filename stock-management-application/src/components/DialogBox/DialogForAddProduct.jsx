@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const DialogForAddProduct = () => {
   //axios credentials

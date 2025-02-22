@@ -30,18 +30,18 @@ export const loginHandler = async (req, res) => {
         // req.session.userInfo = { isClient: isClient, userData: client };
         // console.log(req.session.userData);
 
-        const token = await generateAccessToken({
+        const token = generateAccessToken({
           userName: admin.User_Name,
           userType: admin.User_Type,
         });
-        console.log("token is:", token);
+
         res.cookie("token", token, {
           httpOnly: false, // only from http not from the javascript
           secure: process.env.NODE_ENV === "production", // check wether it is in production or development
           maxAge: 24 * 60 * 60 * 1000, // token live only for 24 hours
         });
-        console.log("successful");
-        return res.status(200).json({ message: "logged in successfull" });
+        console.log("login successfull");
+        return res.status(200).json({ message: "log in successfull" });
       } else {
         return res.status(400).json({ msg: "Login failed" });
       }

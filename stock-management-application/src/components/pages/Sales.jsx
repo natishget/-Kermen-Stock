@@ -14,7 +14,7 @@ import {
 import DialogForSalesEdit from "../DialogBox/DialogForSalesEdit";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Sales = () => {
   const [allSales, setAllSales] = useState([]);
@@ -160,18 +160,19 @@ const Sales = () => {
   );
 
   useEffect(() => {
-    axios
-      .get(`${BackEndURL}/sales/allSales`)
-      .then((res) => {
-        setAllSales(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data.msg);
-      })
-      .finally(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BackEndURL}/sales/allSales`, {
+          withCredentials: true,
+        });
+        setAllSales(response.data);
+      } catch (error) {
+        console.log(error.response.data.msg);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+    fetchData();
   }, []);
 
   const handleEditedSale = (e) => {
@@ -190,7 +191,7 @@ const Sales = () => {
         `${BackEndURL}/sales/updateSales`,
         editedSale
       );
-      console.log(response);
+      alert("Sales Updated");
     } catch (error) {
       alert(error.message);
     }

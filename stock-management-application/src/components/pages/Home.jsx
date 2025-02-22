@@ -5,7 +5,7 @@ import LineChart from "../charts/LineGraph";
 import axios from "axios";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = ({ userData }) => {
   //axios credentials
@@ -14,16 +14,26 @@ const Home = ({ userData }) => {
   const [homeData, setHomeData] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${BackEndURL}/getData/allData`)
-      .then((res) => {
-        setHomeData(res.data);
-        console.log(homeData);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert(err.message);
-      });
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8800/api/getData/allData`,
+          {
+            withCredentials: true,
+          }
+        );
+        setHomeData(response.data);
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+      }
+    };
+    fetchData();
   }, []);
   return (
     <div className="w-full flex-col overflow-hidden md:no-scrollbar hover:overflow-y-scroll">

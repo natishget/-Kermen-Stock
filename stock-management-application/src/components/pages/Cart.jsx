@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 // enviroment variable
-const BackEndURL = process.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -25,8 +25,14 @@ const Cart = () => {
         link.click();
         link.remove(); // Remove the link after download
       })
-      .catch((err) => {
-        console.error("Error downloading PDF", err.message);
+      .catch((error) => {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
       });
   };
 
