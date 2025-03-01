@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Roller-Double wheel",
+    "unit": "Pcs",
+    "description": "Double-wheeled sliding roller"
+  },
+  {
+    "name": "Sliding handle-Aluminum-A",
+    "unit": "Pcs",
+    "description": "Aluminum handle for sliding doors"
+  },
+  {
+    "name": "Sliding Brush",
+    "unit": "Pcs",
+    "description": "Brush for smooth sliding mechanism"
+  },
+  {
+    "name": "3mm Seal Gasket",
+    "unit": "Mt",
+    "description": "3mm thick rubber seal gasket"
+  },
+  {
+    "name": "4mm Seal Gasket",
+    "unit": "Mt",
+    "description": "4mm thick rubber seal gasket"
+  },
+  {
+    "name": "5mm Seal Gasket",
+    "unit": "Mt",
+    "description": "5mm thick rubber seal gasket"
+  },
+  {
+    "name": "6mm Seal Gasket",
+    "unit": "Mt",
+    "description": "6mm thick rubber seal gasket"
+  },
+  {
+    "name": "8mm Seal Gasket",
+    "unit": "Mt",
+    "description": "8mm thick rubber seal gasket"
+  },
+  {
+    "name": "4.8*80 Philips Screw",
+    "unit": "Pcs",
+    "description": "Long Philips head screw"
+  },
+  {
+    "name": "4.8*60 Philips Screw self",
+    "unit": "Pcs",
+    "description": "Self-drilling Philips screw"
+  },
+  {
+    "name": "4.8*60 Philips Screw normal",
+    "unit": "Pcs",
+    "description": "Standard 60mm Philips screw"
+  },
+  {
+    "name": "4.8*50 Philips Screw",
+    "unit": "Pcs",
+    "description": "50mm length Philips screw"
+  },
+  {
+    "name": "4.8*40 Philips Screw",
+    "unit": "Pcs",
+    "description": "40mm length Philips screw"
+  },
+  {
+    "name": "4.8*30 Philips Screw",
+    "unit": "Pcs",
+    "description": "30mm length Philips screw"
+  },
+  {
+    "name": "4.8*25 Philips Screw",
+    "unit": "Pcs",
+    "description": "25mm length Philips screw"
+  },
+  {
+    "name": "4.8*20 Philips Screw",
+    "unit": "Pcs",
+    "description": "20mm length Philips screw"
+  },
+  {
+    "name": "Fisher 6mm 100pcs/pkt",
+    "unit": "Pkt",
+    "description": "Plastic anchors for fixing screws"
+  }
+]

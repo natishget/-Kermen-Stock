@@ -47,6 +47,7 @@ export const loginHandler = async (req, res) => {
       }
     } else {
       // if the login user is not admin
+
       const [rows] = await pool.query(
         "SELECT * FROM user_table WHERE User_Name = ? AND User_Type = ?",
         [username, "user"]
@@ -81,6 +82,7 @@ export const loginHandler = async (req, res) => {
     }
   } catch (error) {
     console.log("error in login handler", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

@@ -321,6 +321,51 @@ ALTER TABLE `sales`
   ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`PID`) REFERENCES `product` (`PID`);
 COMMIT;
 
+
+INSERT INTO `product` ( `Description`, `Product_name`, `Unit_of_measurement`) VALUES
+('L-shaped aluminum bar for framing', 'L', 'Bar'),
+('Right-angle aluminum connector', '90° Ferma', 'Bar'),
+('Oval-shaped aluminum support bar', 'Oval Ferma', 'Bar'),
+('T-shaped aluminum bar for joints', 'T', 'Bar'),
+('Z-shaped aluminum bar for support', 'Z', 'Bar'),
+('Midrail aluminum bar for reinforcement', 'Midrail', 'Bar'),
+('Kick protection aluminum plate', 'Kick plate', 'Bar'),
+('Balancing aluminum component', 'Compensate', 'Bar'),
+('Sliding frame exterior bar', 'Slide Frame ex', 'Bar'),
+('Sliding shatter interior bar', 'Slide Shatter in', 'Bar'),
+('Aluminum cup for sliding mechanism', 'Slide Cup', 'Bar'),
+('Rectangular hollow section bar', '45*45 RHS', 'Bar'),
+('D-shaped aluminum grill bar', 'D-Grill', 'Bar'),
+('Aluminum cladding component', 'Cladd.T', 'Bar'),
+('Right-angle aluminum joint connector', 'Angle connector', 'Pcs'),
+('T-shaped connector for aluminum bars', 'Tee Connector', 'Pcs'),
+('Cross-section aluminum joint connector', 'Tee cross Connector (Cast)', 'Pcs'),
+('Connector for sliding components', 'Sliding connector', 'Pcs'),
+('Secure horizontal door lock', 'Door Lock Horizontal-Type B', 'Set'),
+('Heavy-duty horizontal door lock', 'Door Lock Horizontal-Type A', 'Set'),
+('Handle for curtain wall systems', 'Curtain Wall Handle', 'Pcs'),
+('Support arm for curtain wall', 'Curtain wall Arm', 'Pcs'),
+('Hinge for door or window', 'Hinge', 'Pcs'),
+('Support arm for top opening', 'Arm for top opening', 'Pcs'),
+('Plastic spring for flexible movement', 'Plastic Spring-Plastic', 'Pcs'),
+('Double-wheeled sliding roller', 'Roller-Double wheel', 'Pcs'),
+('Aluminum handle for sliding doors', 'Sliding handle-Aluminum-A', 'Pcs'),
+('Brush for smooth sliding mechanism', 'Sliding Brush', 'Pcs'),
+('3mm thick rubber seal gasket', '3mm Seal Gasket', 'Mt'),
+('4mm thick rubber seal gasket', '4mm Seal Gasket', 'Mt'),
+('5mm thick rubber seal gasket', '5mm Seal Gasket', 'Mt'),
+('6mm thick rubber seal gasket', '6mm Seal Gasket', 'Mt'),
+('8mm thick rubber seal gasket', '8mm Seal Gasket', 'Mt'),
+('Long Philips head screw', '4.8*80 Philips Screw', 'Pcs'),
+('Self-drilling Philips screw', '4.8*60 Philips Screw self', 'Pcs'),
+('Standard 60mm Philips screw', '4.8*60 Philips Screw normal', 'Pcs'),
+('50mm length Philips screw', '4.8*50 Philips Screw', 'Pcs'),
+('40mm length Philips screw', '4.8*40 Philips Screw', 'Pcs'),
+('30mm length Philips screw', '4.8*30 Philips Screw', 'Pcs'),
+('25mm length Philips screw', '4.8*25 Philips Screw', 'Pcs'),
+('20mm length Philips screw', '4.8*20 Philips Screw', 'Pcs'),
+('Plastic anchors for fixing screws', 'Fisher 6mm 100pcs/pkt', 'Pkt');
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
