@@ -4,7 +4,7 @@ export const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "stock_try",
+  database: "kermen_stock",
   connectionLimit: 10,
   waitForConnections: true,
   queueLimit: 0,
