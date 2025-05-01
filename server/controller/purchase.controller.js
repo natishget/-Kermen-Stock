@@ -29,6 +29,7 @@ export const makePurchaseHandler = async (req, res) => {
     color,
     isimported,
   } = req.body;
+  console.log("PID", product_id);
   console.log("color", color);
   console.log("seller", seller);
 

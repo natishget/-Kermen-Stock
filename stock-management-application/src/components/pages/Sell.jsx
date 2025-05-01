@@ -97,7 +97,7 @@ const Sell = () => {
 
   return (
     <div className=" w-full mb-2 overflow-hidden md:no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
-      <div className="w-full mt-24 md:pt-28 ">
+      <div className="w-full mt-32 md:pt-28 ">
         <form
           action=""
           onSubmit={handleSubmit}

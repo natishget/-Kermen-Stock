@@ -74,43 +74,8 @@ export const makeSalesHandler = async (req, res) => {
     // Commit the transaction if all sales were successful
     await pool.query("COMMIT");
 
-    // Generate a PDF with the sales information
-    const doc = new PDFDocument();
-
-    // Set headers to notify the browser to expect a PDF
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=sales-summary-${Date.now()}.pdf`
-    );
-
-    // Generate PDF content
-    doc.fontSize(12).fill("red").text("Kermen Aluminum", { align: "Left" });
-    doc.fontSize(20).fill("black").text("Sales Summary", { align: "center" });
-
-    doc.moveDown();
-
-    sales.forEach((sale, index) => {
-      doc.fontSize(8).text(`Item No. ${index + 1}`);
-      doc.text(`Product ID: ${sale.product_id}`);
-      doc.text(`Quantity: ${sale.quantity}`);
-      doc.text(`Date: ${sale.date}`);
-      doc.text(`Description: ${sale.description}`);
-      doc.text(`Unit Price: ${sale.unit_price}`);
-      doc.text(`Customer: ${sale.customer}`);
-      doc.text(`Color: ${sale.color}`);
-      doc.text(`Imported: ${isimported}`);
-      doc.text(
-        "---------------------------------------------------------------------------------"
-      );
-      doc.moveDown();
-    });
-
-    // Finalize PDF and send it
-    doc.end();
-
-    // Pipe the PDF document directly to the response (no need to save on server)
-    doc.pipe(res);
+    // Return a success message
+    return res.json({ message: "Sales created successfully" });
   } catch (err) {
     // Rollback in case of any error
     await pool.query("ROLLBACK");

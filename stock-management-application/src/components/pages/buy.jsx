@@ -7,7 +7,7 @@ const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Buy = () => {
   const [data, setData] = useState({
-    product_id: "0",
+    product_id: "",
     quantity: "",
     date: "",
     description: "",
@@ -93,7 +93,7 @@ const Buy = () => {
 
   return (
     <div className="w-full overflow-hidden no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
-      <div className="w-full mt-24 md:pt-28 pt-0">
+      <div className="w-full mt-40 md:pt-28 pt-0">
         <form
           action=""
           className="w-full flex-col justify-center items-center pl-10 md:pb-20 pt-5"
@@ -115,7 +115,9 @@ const Buy = () => {
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           >
             {products.map((product, index) => (
-              <option value={product.PID}>{product?.Product_name}</option>
+              <option value={product.PID} key={index}>
+                {product?.Product_name}
+              </option>
             ))}
           </select>
           <br />

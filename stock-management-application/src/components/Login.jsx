@@ -10,6 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(null);
+  const [isLoginInProcess, setIsLoginInProcess] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
   // protected Route
@@ -44,6 +45,7 @@ const Login = () => {
       alert("Please choose user type");
     } else {
       try {
+        setIsLoginInProcess(true);
         const response = await axios.post(
           `${BackEndURL}/auth/login`,
           { username, password, isAdmin },
@@ -60,12 +62,18 @@ const Login = () => {
           alert("Error: " + error.message);
         }
         console.log("error", error);
+      } finally {
+        setIsLoginInProcess(false);
       }
     }
   };
 
   return (
-    <div className="w-full h-screen bg-mycolor">
+    <div
+      className={`w-full h-screen bg-mycolor ${
+        isLoginInProcess ? "cursor-wait" : ""
+      }`}
+    >
       <div className="md:flex sm:flex-row h-full md:p-10 p-5">
         <form
           onSubmit={handleSubmit}
@@ -135,7 +143,9 @@ const Login = () => {
             <br />
             <button
               type="submit"
-              className="rounded-full bg-mybtn md:w-80 w-72 my-4 py-2.5 text-xs font-bold"
+              className={`rounded-full bg-mybtn md:w-80 w-72 my-4 py-2.5 text-xs font-bold ${
+                isLoginInProcess ? "cursor-wait" : ""
+              }`}
             >
               Login
             </button>

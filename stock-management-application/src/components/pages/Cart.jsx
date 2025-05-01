@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { CartContext } from "../CartContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { jsPDF } from "jspdf";
 
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
@@ -13,17 +14,10 @@ const Cart = () => {
 
   const handleSubmit = () => {
     axios
-      .post(`${BackEndURL}/sales/makeSales`, cart, {
-        responseType: "blob", // To handle binary data
-      })
+      .post(`${BackEndURL}/sales/makeSales`, cart)
       .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "sales-summary.pdf"); // Name of the PDF
-        document.body.appendChild(link);
-        link.click();
-        link.remove(); // Remove the link after download
+        alert(response.data.message);
+        generatePDF(cart);
       })
       .catch((error) => {
         if (error.response) {
@@ -33,7 +27,53 @@ const Cart = () => {
         } else {
           alert("Error: " + error.message);
         }
+      })
+      .finally(() => {
+        clearCart();
       });
+  };
+
+  const generatePDF = (sales) => {
+    console.log("creating the pdf");
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(16);
+    doc.setTextColor(255, 0, 0);
+    doc.text("Kermen Aluminum", 15, 15);
+
+    doc.setFontSize(20);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Sales Summary", 70, 30);
+
+    let y = 40;
+
+    sales.forEach((sale, index) => {
+      doc.setFontSize(10);
+      doc.text(`Item No. ${index + 1}`, 15, y);
+      doc.text(`Product ID: ${sale.product_id}`, 15, y + 5);
+      doc.text(`Quantity: ${sale.quantity}`, 15, y + 10);
+      doc.text(`Date: ${sale.date}`, 15, y + 15);
+      doc.text(`Description: ${sale.description}`, 15, y + 20);
+      doc.text(`Unit Price: ${sale.unit_price}`, 15, y + 25);
+      doc.text(`Customer: ${sale.customer}`, 15, y + 30);
+      doc.text(`Color: ${sale.color}`, 15, y + 35);
+      doc.text(`Imported: ${sale.isimported}`, 15, y + 40);
+      doc.text(
+        `-------------------------------------------------------`,
+        15,
+        y + 45
+      );
+
+      y += 50; // Move to the next section
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+
+    // Save the PDF
+    doc.save("sales-summary.pdf");
   };
 
   return (

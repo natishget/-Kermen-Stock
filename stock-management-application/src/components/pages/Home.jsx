@@ -38,7 +38,7 @@ const Home = ({ userData }) => {
   }, []);
   return (
     <div className="w-full flex-col overflow-hidden md:no-scrollbar hover:overflow-y-scroll">
-      <div className="w-full flex mt-5 justify-around">
+      <div className="w-full mt-5 md:justify-around justify-center items-center flex flex-wrap gap-2">
         <Card
           name={"Sales"}
           value={homeData?.totalSalesPrice + " Br"}
@@ -64,7 +64,7 @@ const Home = ({ userData }) => {
         />
       </div>
 
-      <div className="flex gap-2">
+      <div className="md:flex flex-col gap-2">
         <div className="w-[48%] h-[50%] mt-14">
           <LineChart
             fullData={homeData?.monthlySales || []}

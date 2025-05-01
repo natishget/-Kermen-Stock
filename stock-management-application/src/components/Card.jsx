@@ -24,7 +24,7 @@ const Card = ({ name, value, type }) => {
 
   return (
     <>
-      <div className="w-64 border rounded-xl border-slate-600 flex justify-center items-center bg-mycolor mx-3 py-2">
+      <div className="md:w-64 w-64 border rounded-xl border-slate-600 flex justify-center items-center bg-mycolor mx-3 py-2 md:my-0 my-3 ">
         <img
           src={
             type === "1"

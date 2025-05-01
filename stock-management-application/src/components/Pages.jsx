@@ -78,7 +78,7 @@ const Pages = () => {
     <div className="bg-mybg h-screen w-full text-white overflow-hidden ">
       <header className="bg-mycolor h-[13%] flex justify-between items-center">
         <img src={logo} alt="Kermen logo" className="w-32 h-16 p-2" />
-        <p className="self-center text-white font-bold">
+        <p className="self-center text-white font-bold md:block hidden">
           Stock Management Application -
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
