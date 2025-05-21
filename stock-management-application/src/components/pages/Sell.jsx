@@ -89,8 +89,8 @@ const Sell = () => {
   };
 
   const handleOptionChange = (e) => {
-    console.log("checkbox clicked");
-    data.isImported === 1
+   
+    data.isimported === 1
       ? setData({ ...data, isimported: 0 })
       : setData({ ...data, isimported: 1 });
   };

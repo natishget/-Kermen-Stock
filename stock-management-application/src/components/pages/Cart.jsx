@@ -1,8 +1,20 @@
 // src/components/CartPage.js
-import React, { useContext } from "react";
+import React, { useContext, useMemo, useEffect, useState } from "react";
 import { CartContext } from "../CartContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { createTheme, ThemeProvider, useTheme } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Email as EmailIcon,
+} from "@mui/icons-material";
 
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
@@ -10,6 +22,11 @@ const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 const Cart = () => {
   const navigate = useNavigate();
   const { cart, clearCart } = useContext(CartContext);
+  const [isQuotation, setIsQuotation] = useState(true);
+
+  useEffect(() =>{
+    console.log("cart",cart);
+  }, [cart])
 
   const handleSubmit = () => {
     axios
@@ -24,6 +41,7 @@ const Cart = () => {
         document.body.appendChild(link);
         link.click();
         link.remove(); // Remove the link after download
+        setIsQuotation(false);
       })
       .catch((error) => {
         if (error.response) {
@@ -36,30 +54,195 @@ const Cart = () => {
       });
   };
 
+const columns = useMemo(
+    () => [
+      {
+        accessorKey: "product_id", //access nested data with dot notation
+        header: "Product Name",
+        size: 110,
+      },
+      {
+        accessorKey: "quantity",
+        header: "Quantity",
+        size: 70,
+      },
+      {
+        accessorKey: "date", //normal accessorKey
+        header: "Purchase Date",
+        size: 190,
+        Cell: ({ cell }) => formatDate(cell.getValue()),
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
+        size: 150,
+      },
+      {
+        accessorKey: "unit_price",
+        header: "Unit Price",
+        size: 70,
+      },
+      {
+        accessorKey: "color",
+        header: "Color",
+        size: 70,
+      },
+      {
+        accessorKey: "isimported",
+        header: "Is Imported",
+        size: 70,
+      },
+      {
+        accessorKey: "customer",
+        header: "Customer",
+        size: 110,
+      },
+    ],
+    []
+  );
+
+  const globalTheme = useTheme();
+  
+    const tableTheme = useMemo(
+      () =>
+        createTheme({
+          palette: {
+            mode: globalTheme.palette.mode, //let's use the same dark/light mode as the global theme
+            primary: globalTheme.palette.secondary, //swap in the secondary color as the primary for the table
+            delete: globalTheme.palette.success,
+            info: {
+              main: "rgb(255,122,0)", //add in a custom color for the toolbar alert background stuff
+            },
+            background: {
+              default:
+                globalTheme.palette.mode === "light"
+                  ? "rgb(22,32,42,255)" //random light yellow color for the background in light mode
+                  : "#000", //pure black table in dark mode for fun
+            },
+            text: {
+              primary: "#c0c2be",
+            },
+          },
+          typography: {
+            button: {
+              textTransform: "none", //customize typography styles for all buttons in table by default
+              fontSize: "1.2rem",
+            },
+          },
+          components: {
+            MuiTooltip: {
+              styleOverrides: {
+                tooltip: {
+                  fontSize: "1.1rem", //override to make tooltip font size larger
+                },
+              },
+            },
+            MuiSwitch: {
+              styleOverrides: {
+                thumb: {
+                  color: "pink", //change the color of the switch thumb in the columns show/hide menu to pink
+                },
+              },
+            },
+            MuiCheckbox: {
+              styleOverrides: {
+                root: {
+                  color: "#d9d4c5", // Custom color for checkboxes (unchecked state)
+                  "&.Mui-checked": {
+                    color: "#1e88e5", // Custom color for checkboxes (checked state)
+                  },
+                },
+              },
+            },
+            MuiIcon: {
+              styleOverrides: {
+                root: {
+                  color: "#d9d4c5", // Custom color for icons
+                },
+              },
+            },
+            MuiSvgIcon: {
+              styleOverrides: {
+                root: {
+                  color: "#d9d4c5", // Custom color for icons like filter
+                },
+              },
+            },
+            MuiInputAdornment: {
+              styleOverrides: {
+                root: {
+                  color: "#000", // Custom color for search icon in input fields
+                },
+              },
+            },
+          },
+        }),
+      [globalTheme]
+    );
+
+    const formatDate = (dataTimeString) => {
+      const date = new Date(dataTimeString);
+      return date.toLocaleDateString();
+    };
+  
+
+
+
   return (
     <div className=" w-full mb-16 col-span-4 row-span-3 overflow-hidden md:no-scrollbar hover:overflow-y-scroll justify-center items-center">
-      <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
+      <div className="flex justify-between items-center m-4">
+      <h2 className="text-2xl font-bold m-4">{isQuotation ? "Quotation" : "Sales"} for {cart[0]?.customer}</h2>
+      <div>
+        <button className="border py-2 px-3 rounded mr-3 hover:bg-mycolor" onClick={handleSubmit}>Create Sales</button>
+        <button className="border py-2 px-3 rounded hover:bg-mycolor">Create Quotation</button>
+      </div>
+      </div>
       {cart.length === 0 ? (
         <p>No items in the cart</p>
       ) : (
-        <div className="m-3 w-full">
-          {cart.map((item, index) => (
-            <div key={index} className="mb-4 border p-3 rounded-[20px]">
-              <p>Product ID: {item.product_id}</p>
-              <p>Quantity: {item.quantity}</p>
-              <p>Price: {item.unit_price}</p>
-              <p>Date: {item.date}</p>
-              <p>Color: {item.color}</p>
-              <p>imported: {item.isimported}</p>
-            </div>
-          ))}
-          <button
-            onClick={handleSubmit}
-            className="bg-yellow-500 text-white p-2 rounded"
-          >
-            Submit Sales
-          </button>
-        </div>
+        <ThemeProvider theme={tableTheme}>
+        <MaterialReactTable
+          columns={columns}
+          data={cart}
+          enableColumnOrdering
+          enableColumnPinning
+          enableRowActions
+          positionActionsColumn={`last`}
+          renderRowActions={({ row, table }) => (
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "nowrap",
+                gap: "8px",
+              }}
+            >
+              <IconButton
+                sx={{ color: "#1e88e5" }}
+                onClick={() => {
+                  console.log(row.original);
+                  setEditedSale({
+                    PID: row.original.PID,
+                    Quantity: row.original.Quantity,
+                    Unit_price: row.original.Unit_price,
+                    Customer_Name: row.original.Customer_Name,
+                    Date: row.original.Date,
+                    Description: row.original.Description,
+                  });
+                }}
+              ></IconButton>
+              <IconButton
+                color="error"
+                // onClick={() => {
+                //   handleDeletePurchase(row.original.PIID);
+                // }}
+              >
+                {/* <DialogForPurchaseEdit PurchaseData={row.original} /> */}
+                <DeleteIcon sx={{ color: "#d44c3d" }} />
+              </IconButton>
+            </Box>
+          )}
+        />
+      </ThemeProvider>
       )}
     </div>
   );
