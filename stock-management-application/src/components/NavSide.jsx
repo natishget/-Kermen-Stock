@@ -17,9 +17,32 @@ const NavSide = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
+  const[isAdmin, setIsAdmin] = useState(false);
   let att =
     "pl-4 pt-2 pb-2 flex border-l-4 border-yellow-400 rounded text-yellow-400 text-xl";
   let att2 = "pl-4 pt-2 flex pb-2 ";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BackEndURL}/auth/protectedRoute`, {
+          withCredentials: true,
+        });
+        console.log("response from protected route", response)
+        setIsAdmin(response?.data?.user?.userType === "admin" ? true : false);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+        console.log("error", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     switch (location.pathname) {
@@ -92,8 +115,8 @@ const NavSide = () => {
           <img src={icon_level} alt="" className="w-8 pr-3" />
           Invetory Level
         </Link>
-        <Link to="/pages/cogs" className={value === 7 ? att : att2}>
-          <img src={icon_level} alt="" className="w-8 pr-3" />
+        <Link to="/pages/cogs" className={`${value === 7 ? att : att2}, ${!isAdmin && "hidden"}`}>
+          <img src={icon_level} alt="" className=" w-8 pr-3" />
           COGS
         </Link>
       </div>

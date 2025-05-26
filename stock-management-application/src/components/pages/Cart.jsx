@@ -15,6 +15,8 @@ import {
   Delete as DeleteIcon,
   Email as EmailIcon,
 } from "@mui/icons-material";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
 
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
@@ -52,6 +54,24 @@ const Cart = () => {
           alert("Error: " + error.message);
         }
       });
+  };
+
+  const generatePDF = (cart) => {
+    const doc = new jsPDF();
+    let count = 0;
+    autoTable(doc, {
+      head: [['No','Product ID', 'Quantity', 'Color', 'Imported', 'Date']],
+      body: cart.map(item => [
+        ++count,
+        item.product_id,
+        item.quantity,
+        item.color,
+        item.imported ? 'Yes' : 'No',
+        item.date,
+      ]),
+    });
+  
+    doc.save('Quotation.pdf');
   };
 
 const columns = useMemo(
@@ -194,7 +214,7 @@ const columns = useMemo(
       <h2 className="text-2xl font-bold m-4">{isQuotation ? "Quotation" : "Sales"} for {cart[0]?.customer}</h2>
       <div>
         <button className="border py-2 px-3 rounded mr-3 hover:bg-mycolor" onClick={handleSubmit}>Create Sales</button>
-        <button className="border py-2 px-3 rounded hover:bg-mycolor">Create Quotation</button>
+        <button className="border py-2 px-3 rounded hover:bg-mycolor" onClick={() => generatePDF(cart)}>Create Quotation</button>
       </div>
       </div>
       {cart.length === 0 ? (

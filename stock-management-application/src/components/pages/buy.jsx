@@ -69,7 +69,7 @@ const Buy = () => {
           alert("successfully purchased");
         }
       } catch (err) {
-        console.error(err);
+        console.error("error on buying", err);
         alert("something wrong please trying again after refreshing");
       }
     }
