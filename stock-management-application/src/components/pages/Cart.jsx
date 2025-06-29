@@ -26,34 +26,24 @@ const Cart = () => {
   const { cart, clearCart } = useContext(CartContext);
   const [isQuotation, setIsQuotation] = useState(true);
 
-  useEffect(() =>{
-    console.log("cart",cart);
-  }, [cart])
-
-  const handleSubmit = () => {
-    axios
-      .post(`${BackEndURL}/sales/makeSales`, cart, {
-        responseType: "blob", // To handle binary data
-      })
-      .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "sales-summary.pdf"); // Name of the PDF
-        document.body.appendChild(link);
-        link.click();
-        link.remove(); // Remove the link after download
-        setIsQuotation(false);
-      })
-      .catch((error) => {
+  const handleSubmit = async () => {
+    try{
+    const response = await axios.post(`${BackEndURL}/sales/makeSales`, cart);
+    console.log("response",response);
+    setIsQuotation(false);
+    generatePDF(cart);
+    clearCart();
+    alert(response.data.message);
+    }
+      catch(error) {
         if (error.response) {
-          alert(error.response.data.message);
+          alert(error.response.data.error);
         } else if (error.request) {
           alert("No response from server. Please try again.");
         } else {
           alert("Error: " + error.message);
         }
-      });
+      };
   };
 
   const generatePDF = (cart) => {
@@ -71,7 +61,7 @@ const Cart = () => {
       ]),
     });
   
-    doc.save('Quotation.pdf');
+    doc.save(isQuotation ? 'Quotation.pdf' : 'Sales.pdf');
   };
 
 const columns = useMemo(

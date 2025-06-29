@@ -22,21 +22,23 @@ export const makeSalesHandler = async (req, res) => {
   console.log("creating multiple sales in process");
 
   const sales = req.body; // Expecting an array of sales
-  console.table(sales);
+  
 
   // Ensure that we received an array of sales
-  if (!Array.isArray(sales) || sales.length === 0) {
+  if (!Array.isArray(sales) || sales.length === 0 || !sales) {
     return res
       .status(400)
-      .json({ message: "Invalid input, array of sales expected" });
+      .json({ error: "Cart is Empty!" });
   }
 
   try {
+    
     // Start a transaction
     await pool.query("START TRANSACTION");
 
     // Process each sale
     for (const sale of sales) {
+      console.log("sale",sale)
       const {
         product_id,
         quantity,
@@ -49,6 +51,7 @@ export const makeSalesHandler = async (req, res) => {
       } = sale;
 
       // Execute the stored procedure or query for each sale
+
       const [rows] = await pool.query(
         `CALL HandleSale(?, ?, ?, ?, ?, ?, ?, ?)`,
         [
@@ -62,60 +65,25 @@ export const makeSalesHandler = async (req, res) => {
           isimported,
         ]
       );
+      console.log("rows result", rows);
 
-      console.log("rows", rows);
-
-      if (rows.length === 0) {
-        await pool.query("ROLLBACK");
-        return res.json({ message: "Failed to process one of the sales" });
-      }
+      // if (rows.length === 0) {
+      //   await pool.query("ROLLBACK");
+      //   return res.status(400).json({ message: "Failed to process one of the sales" });
+      // }
     }
 
     // Commit the transaction if all sales were successful
     await pool.query("COMMIT");
 
-    // Generate a PDF with the sales information
-    const doc = new PDFDocument();
+    res.status(200).json({message: "Sales Successfully"})
 
-    // Set headers to notify the browser to expect a PDF
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=sales-summary-${Date.now()}.pdf`
-    );
-
-    // Generate PDF content
-    doc.fontSize(12).fill("red").text("Kermen Aluminum", { align: "Left" });
-    doc.fontSize(20).fill("black").text("Sales Summary", { align: "center" });
-
-    doc.moveDown();
-
-    sales.forEach((sale, index) => {
-      doc.fontSize(8).text(`Item No. ${index + 1}`);
-      doc.text(`Product ID: ${sale.product_id}`);
-      doc.text(`Quantity: ${sale.quantity}`);
-      doc.text(`Date: ${sale.date}`);
-      doc.text(`Description: ${sale.description}`);
-      doc.text(`Unit Price: ${sale.unit_price}`);
-      doc.text(`Customer: ${sale.customer}`);
-      doc.text(`Color: ${sale.color}`);
-      doc.text(`Imported: ${isimported}`);
-      doc.text(
-        "---------------------------------------------------------------------------------"
-      );
-      doc.moveDown();
-    });
-
-    // Finalize PDF and send it
-    doc.end();
-
-    // Pipe the PDF document directly to the response (no need to save on server)
-    doc.pipe(res);
+    
   } catch (err) {
     // Rollback in case of any error
     await pool.query("ROLLBACK");
-    console.log(err.sqlMessage);
-    return res.json({ message: err.sqlMessage });
+    console.log("error",err);
+    return res.status(400).json({ error: err.sqlMessage });
   }
 };
 

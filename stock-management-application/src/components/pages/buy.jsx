@@ -68,9 +68,8 @@ const Buy = () => {
         if (response.data === "1") {
           alert("successfully purchased");
         }
-      } catch (err) {
-        console.error("error on buying", err);
-        alert("something wrong please trying again after refreshing");
+      } catch (error) {
+        alert(error);
       }
     }
   };

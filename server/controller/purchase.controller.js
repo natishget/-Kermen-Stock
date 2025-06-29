@@ -30,7 +30,7 @@ export const makePurchaseHandler = async (req, res) => {
     isimported,
   } = req.body;
   console.log("color", color);
-  console.log("seller", seller);
+  console.log("isImported", isimported);
 
   try {
     const [rows] = await pool.query(
@@ -50,7 +50,7 @@ export const makePurchaseHandler = async (req, res) => {
     console.log("successful");
     return res.json("1");
   } catch (error) {
-    console.error(error.message);
+    res.status(400).json({message: "Can't complete Purchase"})
   }
 };
 

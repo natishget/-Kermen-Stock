@@ -25,11 +25,29 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `HandleSale` (IN `product_id` INT, IN `sale_quantity` INT, IN `sale_date` DATETIME, IN `Description` VARCHAR(255), IN `Unit_Price` DECIMAL(10,2), IN `customer_name` VARCHAR(255), IN `color` VARCHAR(25), IN `isimported` BOOLEAN)   BEGIN
-    DECLARE current_quantity INT;
-    DECLARE Total_Price DECIMAL(10, 2);
+DELIMITER $$
 
-    -- Calculate the total price
+CREATE DEFINER=`root`@`localhost` PROCEDURE `HandleSale` (
+  IN `product_id` INT,
+  IN `sale_quantity` INT,
+  IN `sale_date` DATETIME,
+  IN `Description` VARCHAR(255),
+  IN `Unit_Price` DECIMAL(10,2),
+  IN `customer_name` VARCHAR(255),
+  IN `in_color` VARCHAR(255) COLLATE utf8mb4_general_ci,
+  IN `in_isimported` BOOLEAN
+)
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+BEGIN
+    DECLARE current_quantity INT;
+    DECLARE Total_Price DECIMAL(10,2);
+
+    -- Handle case when no row is found
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET current_quantity = NULL;
+
+    -- Calculate total price
     SET Total_Price = sale_quantity * Unit_Price;
 
     -- Start transaction
@@ -38,68 +56,119 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `HandleSale` (IN `product_id` INT, I
     -- Get the current quantity from inventory_level
     SELECT Quantity INTO current_quantity
     FROM inventory_level
-    WHERE PID = product_id AND Color = color AND isImported = isimported
+    WHERE PID = product_id AND Color = in_color AND isImported = in_isimported
+    LIMIT 1
     FOR UPDATE;
 
-    -- Check if sufficient quantity is available
+    -- Check inventory state
     IF current_quantity IS NULL THEN
-        -- Product does not exist in inventory_level
         ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product does not exist in inventory_level';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product does not exist in inventory';
     ELSEIF current_quantity < sale_quantity THEN
-        -- Insufficient quantity
         ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity in inventory_level';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity in inventory';
     ELSE
-        -- Insert into sales table
-        INSERT INTO sales (PID, Quantity, Date, Description, Unit_price, Customer_Name, Total_Price, Color, isImported)
-        VALUES (product_id, sale_quantity, sale_date, Description, Unit_Price, customer_name, Total_Price, color, isimported);
+        -- Record the sale
+        INSERT INTO sales (
+            PID, Quantity, Date, Description,
+            Unit_price, Customer_Name, Total_Price,
+            Color, isImported
+        )
+        VALUES (
+            product_id, sale_quantity, sale_date, Description,
+            Unit_Price, customer_name, Total_Price,
+            in_color, in_isimported
+        );
 
-        -- Update inventory_level table
+        -- Update inventory
         UPDATE inventory_level
         SET Quantity = Quantity - sale_quantity, Date = NOW()
-        WHERE PID = product_id AND Color = color AND isImported = isimported;
+        WHERE PID = product_id AND Color = in_color AND isImported = in_isimported;
 
-        -- Commit transaction
+        -- Finish transaction
         COMMIT;
     END IF;
-
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateInventory` (IN `product_id` INT, IN `purchase_quantity` INT, IN `Invoice_No` VARCHAR(255), IN `Unit_Price` DECIMAL(10,2), IN `Description` VARCHAR(255), IN `Seller` VARCHAR(255), IN `Purchase_Date` DATETIME, IN `color` VARCHAR(25), IN `isimported` BOOLEAN)   BEGIN
-    DECLARE Total_Price DECIMAL(10, 2);
+DELIMITER ;
 
-    -- Calculate the total price
+
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateInventory` (
+    IN `product_id` INT,
+    IN `purchase_quantity` INT,
+    IN `Invoice_No` VARCHAR(255),
+    IN `Unit_Price` DECIMAL(10,2),
+    IN `Description` VARCHAR(255),
+    IN `Seller` VARCHAR(255),
+    IN `Purchase_Date` DATETIME,
+    IN `in_color` VARCHAR(255) COLLATE utf8mb4_general_ci,
+    IN `in_isimported` BOOLEAN
+)
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+BEGIN
+    DECLARE Total_Price DECIMAL(10, 2);
+    DECLARE InventoryCount INT;
+
+    -- Optional: handle errors gracefully
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    -- Compute total price
     SET Total_Price = purchase_quantity * Unit_Price;
 
     -- Start transaction
     START TRANSACTION;
 
-    -- Lock the inventory_level table to prevent other writes
-    SELECT * FROM inventory_level WHERE PID = product_id AND Color = color AND isImported = isimported FOR UPDATE;
+    -- Check if product exists in inventory_level
+    SELECT COUNT(*) INTO InventoryCount
+    FROM inventory_level
+    WHERE PID = product_id
+      AND Color COLLATE utf8mb4_general_ci = in_color
+      AND isImported = in_isimported;
 
-    -- Check if the product exists in inventory_level
-    IF EXISTS (SELECT 1 FROM inventory_level WHERE PID = product_id AND Color = color AND isImported = isimported) THEN
-        -- Update Inventory_Level table
+    -- Lock row (if exists)
+    SELECT * FROM inventory_level
+    WHERE PID = product_id
+      AND Color COLLATE utf8mb4_general_ci = in_color
+      AND isImported = in_isimported
+    FOR UPDATE;
+
+    IF InventoryCount > 0 THEN
+        -- Update existing inventory
         UPDATE inventory_level
-        SET Quantity = Quantity + purchase_quantity, Date = NOW()
-        WHERE PID = product_id AND Color = color AND isImported = isimported;
+        SET Quantity = Quantity + purchase_quantity,
+            `Date` = NOW()
+        WHERE PID = product_id
+          AND Color COLLATE utf8mb4_general_ci = in_color
+          AND isImported = in_isimported;
     ELSE
-        -- Insert the product into inventory_level if it does not exist
-        INSERT INTO inventory_level (PID, Quantity, Date, Color, isImported)
-        VALUES (product_id, purchase_quantity, NOW(), color, isimported);
+        -- Insert new inventory record
+        INSERT INTO inventory_level (PID, Quantity, `Date`, Color, isImported)
+        VALUES (product_id, purchase_quantity, NOW(), in_color, in_isimported);
     END IF;
 
-    -- Insert into Purchased_Inventory table
-    INSERT INTO purchased_inventory (PID, Quantity, Invoice_No, Unit_Price, Date, Description, Total_Price, Seller, Color, isImported)
-    VALUES (product_id, purchase_quantity, Invoice_No, Unit_Price, Purchase_Date, Description, Total_Price, Seller, color, isimported);
+    -- Insert into purchased_inventory
+    INSERT INTO purchased_inventory (
+        PID, Quantity, Invoice_No, Unit_Price, `Date`,
+        Description, Total_Price, Seller, Color, isImported
+    )
+    VALUES (
+        product_id, purchase_quantity, Invoice_No, Unit_Price, Purchase_Date,
+        Description, Total_Price, Seller, in_color, in_isimported
+    );
 
     -- Commit transaction
     COMMIT;
-
 END$$
 
 DELIMITER ;
+
 
 -- --------------------------------------------------------
 
