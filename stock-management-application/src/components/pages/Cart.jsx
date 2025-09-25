@@ -126,11 +126,11 @@ const columns = useMemo(
             background: {
               default:
                 globalTheme.palette.mode === "light"
-                  ? "rgb(22,32,42,255)" //random light yellow color for the background in light mode
+                  ? "rgba(255, 255, 255, 1)" //random light yellow color for the background in light mode
                   : "#000", //pure black table in dark mode for fun
             },
             text: {
-              primary: "#c0c2be",
+              primary: "#3b3b3bff",
             },
           },
           typography: {
@@ -157,7 +157,7 @@ const columns = useMemo(
             MuiCheckbox: {
               styleOverrides: {
                 root: {
-                  color: "#d9d4c5", // Custom color for checkboxes (unchecked state)
+                  color: "#4d4d4dff", // Custom color for checkboxes (unchecked state)
                   "&.Mui-checked": {
                     color: "#1e88e5", // Custom color for checkboxes (checked state)
                   },
@@ -167,14 +167,14 @@ const columns = useMemo(
             MuiIcon: {
               styleOverrides: {
                 root: {
-                  color: "#d9d4c5", // Custom color for icons
+                  color: "#4d4d4dff", // Custom color for icons
                 },
               },
             },
             MuiSvgIcon: {
               styleOverrides: {
                 root: {
-                  color: "#d9d4c5", // Custom color for icons like filter
+                  color: "#4d4d4dff", // Custom color for icons like filter
                 },
               },
             },
@@ -201,10 +201,10 @@ const columns = useMemo(
   return (
     <div className=" w-full mb-16 col-span-4 row-span-3 overflow-hidden md:no-scrollbar hover:overflow-y-scroll justify-center items-center">
       <div className="flex justify-between items-center m-4">
-      <h2 className="text-2xl font-bold m-4">{isQuotation ? "Quotation" : "Sales"} for {cart[0]?.customer}</h2>
+      <h2 className="text-2xl font-bold my-4 text-gray-600">{isQuotation ? "Quotation" : "Sales"} </h2>
       <div>
-        <button className="border py-2 px-3 rounded mr-3 hover:bg-mycolor" onClick={handleSubmit}>Create Sales</button>
-        <button className="border py-2 px-3 rounded hover:bg-mycolor" onClick={() => generatePDF(cart)}>Create Quotation</button>
+        <button className="border py-2 px-3 rounded mr-3 hover:bg-gray-700 bg-gray-800 font-bold" onClick={handleSubmit}>Create Sales</button>
+        <button className="border py-2 px-3 rounded hover:bg-gray-700 bg-gray-800 font-bold" onClick={() => generatePDF(cart)}>Create Quotation</button>
       </div>
       </div>
       {cart.length === 0 ? (
