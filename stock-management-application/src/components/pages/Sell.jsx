@@ -101,7 +101,7 @@ const Sell = () => {
         <form
           action=""
           onSubmit={handleSubmit}
-          className="w-full flex-col justify-center items-center pl-10 md:pb-20 pt-5"
+          className="w-full bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 md:pb-20 pt-5"
         >
           <h1 className="md:text-4xl text-3xl font-bold">
             Sell <span className="text-blue-300">Now</span>

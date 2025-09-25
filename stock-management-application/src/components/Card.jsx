@@ -5,44 +5,26 @@ import buy from "../assets/icons/sell.svg";
 
 import { useState, useEffect } from "react";
 
+import { House, BadgeDollarSign, ShoppingBag, Handshake, ShoppingCart, ChartNoAxesColumn, Calculator, LogOut  } from "lucide-react"
+
 const Card = ({ name, value, type }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (count <= 100) {
-        setCount((prevCount) => prevCount + 4);
-      } else {
-        clearInterval(interval);
-      }
-    }, 0.1);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+ 
 
   return (
     <>
-      <div className="w-64 border rounded-xl border-slate-600 flex justify-center items-center bg-mycolor mx-3 py-2">
-        <img
-          src={
-            type === "1"
-              ? sales
+      <div className="w-64 border rounded-xl border-slate-300 flex justify-center items-center bg-mycolor mx-3 py-2">
+        { type === "1"
+              ? <BadgeDollarSign size={28} className="text-gray-600"/>
               : type === "2"
-              ? sell
+              ? <Handshake size={28} className="text-gray-600"/>
               : type === "3"
-              ? purchase
+              ? <ShoppingBag size={28} className="text-gray-600"/>
               : type === "4"
-              ? buy
-              : purchase
-          }
-          alt="small"
-          className="w-7"
-        />
+              ? <ShoppingCart size={28} className="text-gray-600"/>
+              : <BadgeDollarSign size={28} className="text-gray-600"/>}
         <div className="pl-3">
-          <p className="font-bold text-gray-600">{name}</p>
-          <p className="text-yellow-400 font-bold">{value}</p>
+          <p className="font-bold text-gray-600 text-lg">{name}</p>
+          <p className="text-yellow-500 font-bold text-xl">{value}</p>
         </div>
       </div>
     </>

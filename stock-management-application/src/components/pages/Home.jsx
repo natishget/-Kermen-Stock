@@ -4,6 +4,9 @@ import Card2 from "../Card2";
 import LineChart from "../charts/LineGraph";
 import axios from "axios";
 
+
+
+
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 

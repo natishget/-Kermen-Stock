@@ -95,22 +95,22 @@ const Buy = () => {
       <div className="w-full mt-24 md:pt-28 pt-0">
         <form
           action=""
-          className="w-full flex-col justify-center items-center pl-10 md:pb-20 pt-5"
+          className="w-full bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 md:pb-20 pt-5"
         >
           <h1 className="md:text-4xl text-3xl font-bold">
             Buy <span className="text-yellow-500">Now</span>
           </h1>
-          <p className="text-xs pt-3 pb-7">
+          <p className=" pt-3 pb-7">
             Small purchase makes a big difference
           </p>
-          <label htmlFor="" className="text-xs pt-28">
+          <label htmlFor="" className="pt-28">
             Product ID
           </label>
           <br />
           <select
             name="product_id"
             onChange={handleChange}
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           >
             {products.map((product, index) => (
@@ -118,7 +118,7 @@ const Buy = () => {
             ))}
           </select>
           <br />
-          <label htmlFor="quantity" className="text-xs pt-28">
+          <label htmlFor="quantity" className=" pt-28">
             Quantity
           </label>
           <br />
@@ -127,11 +127,11 @@ const Buy = () => {
             onChange={handleChange}
             name="quantity"
             id="quantity"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="date" className="text-xs pt-28">
+          <label htmlFor="date" className=" pt-28">
             Date
           </label>
           <br />
@@ -140,11 +140,11 @@ const Buy = () => {
             onChange={handleChange}
             name="date"
             id="date"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="invoice_no" className="text-xs pt-28">
+          <label htmlFor="invoice_no" className=" pt-28">
             Invoice No
           </label>
           <br />
@@ -153,11 +153,11 @@ const Buy = () => {
             onChange={handleChange}
             name="invoice_no"
             id="invoice"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="price" className="text-xs pt-28">
+          <label htmlFor="price" className=" pt-28">
             Unit price
           </label>
           <br />
@@ -166,11 +166,11 @@ const Buy = () => {
             onChange={handleChange}
             name="unit_price"
             id="price"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="color" className="text-xs pt-28">
+          <label htmlFor="color" className=" pt-28">
             Color
           </label>
           <br />
@@ -179,11 +179,11 @@ const Buy = () => {
             onChange={handleChange}
             name="color"
             id="color"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="description" className="text-xs pt-28">
+          <label htmlFor="description" className=" pt-28">
             Seller Name
           </label>
           <br />
@@ -192,11 +192,11 @@ const Buy = () => {
             onChange={handleChange}
             name="seller"
             id="seller"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="description" className="text-xs pt-28">
+          <label htmlFor="description" className=" pt-28">
             Description
           </label>
           <br />
@@ -205,11 +205,11 @@ const Buy = () => {
             onChange={handleChange}
             name="description"
             id="description"
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
+            className="placeholder:italic placeholder:text-slate-400 placeholder: focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-300
              border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="isImported" className="text-xs">
+          <label htmlFor="isImported" className="">
             Imported
           </label>
           <input
@@ -223,7 +223,7 @@ const Buy = () => {
           <br />
           <button
             onClick={handleSubmit}
-            className="rounded-full bg-yellow-500 tracking-widest md:w-11/12 w-72 my-4 py-2.5 text-xs font-bold "
+            className="rounded-full bg-yellow-500 tracking-widest md:w-11/12 w-72 my-4 py-2.5  font-bold "
           >
             SUBMIT
           </button>
