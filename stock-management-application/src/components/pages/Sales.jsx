@@ -229,7 +229,7 @@ const Sales = () => {
   return (
     <>
       <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
-        <h1 className="text-gray-600 font-bold text-4xl"><span className="text-yellow-500">Sales</span> Table</h1>
+        <h1 className="text-gray-600 font-bold text-4xl"><span className="text-blue-500">Sales</span> Table</h1>
         <div className="bg-black">
           <ThemeProvider theme={tableTheme}>
             <MaterialReactTable

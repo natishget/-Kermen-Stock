@@ -82,11 +82,11 @@ const Purchase = () => {
           background: {
             default:
               globalTheme.palette.mode === "light"
-                ? "rgb(22,32,42,255)" //random light yellow color for the background in light mode
+                ? "rgba(255,255,255,1)" //random light yellow color for the background in light mode
                 : "#000", //pure black table in dark mode for fun
           },
           text: {
-            primary: "#c0c2be",
+            primary: "#3b3b3bff",
           },
         },
         typography: {
@@ -113,7 +113,7 @@ const Purchase = () => {
           MuiCheckbox: {
             styleOverrides: {
               root: {
-                color: "#d9d4c5", // Custom color for checkboxes (unchecked state)
+                color: "#4d4d4dff", // Custom color for checkboxes (unchecked state)
                 "&.Mui-checked": {
                   color: "#1e88e5", // Custom color for checkboxes (checked state)
                 },
@@ -123,21 +123,21 @@ const Purchase = () => {
           MuiIcon: {
             styleOverrides: {
               root: {
-                color: "#d9d4c5", // Custom color for icons
+                color: "#4d4d4dff", // Custom color for icons
               },
             },
           },
           MuiSvgIcon: {
             styleOverrides: {
               root: {
-                color: "#d9d4c5", // Custom color for icons like filter
+                color: "#4d4d4dff", // Custom color for icons like filter
               },
             },
           },
           MuiInputAdornment: {
             styleOverrides: {
               root: {
-                color: "#000", // Custom color for search icon in input fields
+                color: "#4d4d4dff", // Custom color for search icon in input fields
               },
             },
           },
@@ -197,7 +197,8 @@ const Purchase = () => {
   }
 
   return (
-    <div className="col-span-4 row-span-3 overflow-hidden no-scrollbar hover:overflow-y-scroll  relative overflow-x-auto">
+    <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+       <h1 className="text-gray-600 font-bold text-4xl"><span className="text-yellow-500">Purchase</span> Table</h1>
       <ThemeProvider theme={tableTheme}>
         <MaterialReactTable
           columns={columns}
