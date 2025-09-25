@@ -41,7 +41,7 @@ const Card = ({ name, value, type }) => {
           className="w-7"
         />
         <div className="pl-3">
-          <p className="font-bold">{name}</p>
+          <p className="font-bold text-gray-600">{name}</p>
           <p className="text-yellow-400 font-bold">{value}</p>
         </div>
       </div>

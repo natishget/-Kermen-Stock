@@ -51,7 +51,7 @@ const DialogForAddProduct = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-myblue text-white border border-white px-4 py-2 mr-3">
+        <Button className="bg-myblue text-gray-600 border border-gray-600 hover:text-white hover:bg-gray-800  px-4 py-2 mr-3">
           Add Product
         </Button>
 
