@@ -65,19 +65,19 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-mycolor">
-      <div className="md:flex sm:flex-row h-full md:p-10 p-5">
+    <div className="w-full h-screen bg-mybg">
+      <div className="md:flex sm:flex-row h-full md:p-10 p-5 drop-shadow-xl">
         <form
           onSubmit={handleSubmit}
-          className="md:w-1/2 sm:w-full h-full  bg-mybg text-white flex justify-center items-center"
+          className="md:w-1/2 sm:w-full h-full text-gray-600 bg-mycolor flex justify-center items-center"
         >
           <div className="mx-5">
             <h1 className="md:text-4xl text-2xl">Welcome!</h1>
             <h1 className="md:text-4xl text-3xl font-bold">Login</h1>
-            <p className="text-xs pt-3 pb-7">
+            <p className=" pt-3 pb-7">
               Manage your stock properly and grow your profit
             </p>
-            <label htmlFor="username" className="text-xs pt-28">
+            <label htmlFor="username" className=" pt-28">
               Username
             </label>
             <br />
@@ -88,7 +88,7 @@ const Login = () => {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Example: JohnTheBest"
               required
-              className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+              className="placeholder:italic placeholder:text-slate-400 border-white border rounded-full bg-gray-100 p-2 md:w-80 w-72"
             />
             <br />
             <label htmlFor="password" className="text-xs mt-3">
@@ -102,40 +102,40 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Min. 8 Character"
               required
-              className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-full bg-mybg p-1 md:w-80 w-72"
+              className="placeholder:italic placeholder:text-slate-400  border-white border rounded-full bg-gray-100 p-2 md:w-80 w-72"
             />
             <br />
 
-            <div className="mt-3">
+            <div className="mt-5 flex items-center">
               <input
                 type="radio"
                 name="type"
                 id="usertype"
-                className="bg-mybg opacity-35"
+                className="h-5 w-5 appearance-none rounded-full border-2 border-gray-300 checked:border-blue-400 checked:bg-blue-400 transition-colors duration-200 cursor-pointer"
                 checked={isAdmin === true}
                 value="true"
                 onChange={handleOptionChange}
               />
-              <label htmlFor="usertype" className="mr-3 ml-1 text-xs">
+              <label htmlFor="usertype" className="mr-3 ml-1">
                 Admin
               </label>
               <input
                 type="radio"
                 name="type"
                 id="usertype1"
-                className="bg-mybg opacity-35"
+                className="h-5 w-5 appearance-none rounded-full border-2 border-gray-300 checked:border-blue-400 checked:bg-blue-400 transition-colors duration-200 cursor-pointer"
                 checked={isAdmin === false}
                 value="false"
                 onChange={handleOptionChange}
               />
-              <label htmlFor="usertype1" className="ml-1 text-xs">
+              <label htmlFor="usertype1" className="ml-1 ">
                 User
               </label>
             </div>
             <br />
             <button
               type="submit"
-              className="rounded-full bg-mybtn md:w-80 w-72 my-4 py-2.5 text-xs font-bold"
+              className="rounded-full bg-yellow-400 hover:bg-yellow-500 transition md:w-80 w-72 my-4 py-2.5  font-bold"
             >
               Login
             </button>

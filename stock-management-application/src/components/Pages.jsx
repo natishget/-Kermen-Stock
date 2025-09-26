@@ -36,7 +36,7 @@ const Pages = () => {
   // axios credentials
   axios.defaults.withCredentials = true;
   useEffect(() => {
-    if (location.pathname === "/pages/") {
+    if (location.pathname === "/pages/" || location.pathname === "/pages") {
       setCurrentPath("Home");
     } else if (location.pathname === "/pages/sell") {
       setCurrentPath("Sell Now");

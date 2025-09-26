@@ -21,8 +21,8 @@ const NavSide = () => {
   const [value, setValue] = useState(1);
   const[isAdmin, setIsAdmin] = useState(false);
   let att =
-    `pl-4 py-5 flex gap-2 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-8 bg-gray-100 ml-2 ${!isAdmin && "hidden"}`;
-  let att2 = `pl-4 py-4 flex items-center gap-2 text-xl mt-8 border border-black rounded justify-center mx-2 ${!isAdmin && "hidden"} hover:text-gray-800`;
+    `pl-4 py-5 flex gap-2 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-8 bg-gray-100 ml-2 `;
+  let att2 = `pl-4 py-4 flex items-center gap-2 text-xl mt-8 border border-black rounded justify-center mx-2  hover:text-gray-800`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +30,7 @@ const NavSide = () => {
         const response = await axios.get(`${BackEndURL}/auth/protectedRoute`, {
           withCredentials: true,
         });
-        console.log("response from protected route", response)
+        
         setIsAdmin(response?.data?.user?.userType === "admin" ? true : false);
       } catch (error) {
         if (error.response) {
@@ -49,6 +49,9 @@ const NavSide = () => {
   useEffect(() => {
     switch (location.pathname) {
       case "/pages/":
+        setValue(1);
+        break;
+      case "/pages":
         setValue(1);
         break;
       case "/pages/sales":
@@ -120,7 +123,7 @@ const NavSide = () => {
           <ChartNoAxesColumn />
           Invetory Level
         </Link>
-        <Link to="/pages/cogs" className={value === 7 ? att : att2}>
+        <Link to="/pages/cogs" className={ isAdmin ? (value === 7 ? att : att2) : "hidden" }>
           <Calculator />
           COGS
         </Link>
