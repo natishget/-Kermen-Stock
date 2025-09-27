@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import DialogForAddProduct from "./DialogBox/DialogForAddProduct";
-import logo from "../assets/kermen_logo.png";
+import logo from "../assets/kermen_logo2.png";
 import Cart_png from "../assets/shopping-cart.png";
 import NavSide from "./NavSide";
 import Home from "../components/pages/Home";
@@ -18,7 +18,7 @@ import Sales from "../components/pages/Sales";
 import Develop from "../components//pages/InventoryLevel";
 import Cart from "./pages/Cart";
 import COGS from "./pages/COGS";
-import CartImg from "../assets/icons/cart.svg";
+import UserManagement from "./pages/UserManagement";
 
 import axios from "axios";
 import DialogForAddUser from "./DialogBox/DialogForAddUser";
@@ -49,6 +49,8 @@ const Pages = () => {
     } else if (location.pathname === "/pages/inventory") {
       setCurrentPath("Inventory Levels");
     } else if (location.pathname === "/pages/cart") {
+      setCurrentPath("Carts");
+    } else if (location.pathname === "/pages/user-management") {
       setCurrentPath("Carts");
     } else {
       setCurrentPath("");
@@ -103,6 +105,7 @@ const Pages = () => {
           <Route path="inventory" element={<Develop />} />
           <Route path="cart" element={<Cart />} />
           <Route path="cogs" element={<COGS />} />
+          <Route path="user-management" element={<UserManagement />} />
         </Routes>
         {/* </BrowserRouter>  */}
       </div>

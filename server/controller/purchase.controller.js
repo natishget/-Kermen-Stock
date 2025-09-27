@@ -12,7 +12,7 @@ export const allPurchaseHandler = async (req, res) => {
     console.log("successful");
     return res.json(rows);
   } catch (error) {
-    console.log(error);
+    res.status(400).json(error.message);
   }
 };
 
@@ -48,9 +48,9 @@ export const makePurchaseHandler = async (req, res) => {
       ]
     );
     console.log("successful");
-    return res.json("1");
+    return res.status(200).json("1");
   } catch (error) {
-    res.status(400).json({message: "Can't complete Purchase"})
+    res.status(400).json({ message: "Can't complete Purchase" });
   }
 };
 
@@ -61,7 +61,7 @@ export const handleEditPurchase = async (req, res) => {
     Quantity,
     Unit_Price,
     Seller,
-    Date,
+    Date: purchaseDate,
     Description,
     Color,
     isImported,
@@ -72,20 +72,20 @@ export const handleEditPurchase = async (req, res) => {
     Quantity,
     Unit_Price,
     Seller,
-    Date,
+    purchaseDate,
     Description,
     Color,
     isImported
   );
   try {
     const [rows] = await pool.query(
-      "UPDATE sales SET PID = ?, Quantity = ?, Unit_Price = ?, Seller = ?, Date = ?, Description = ?, Total_Price = ?, Color = ?, isImported = ? WHERE PIID = ?",
+      "UPDATE purchased_inventory SET PID = ?, Quantity = ?, Unit_Price = ?, Seller = ?, Date = ?, Description = ?, Total_Price = ?, Color = ?, isImported = ? WHERE PIID = ?",
       [
         PID,
         Quantity,
         Unit_Price,
         Seller,
-        Date,
+        new Date(purchaseDate).toISOString().split("T")[0],
         Description,
         Quantity * Unit_Price,
         Color.toUpperCase(),
@@ -93,23 +93,24 @@ export const handleEditPurchase = async (req, res) => {
         PIID,
       ]
     );
-    res.json({ message: "Purchase Edited" });
+    console.log(rows);
+    res.status(200).json({ message: "Purchase Edited" });
   } catch (error) {
-    res.json({ message: error.message });
+    console.log(error);
+    res.status(400).json({ message: error.message });
   }
 };
 
 export const handleDeletePurchase = async (req, res) => {
-  const salesId = req.body;
+  const purchaseId = req.body;
 
-  console.log(salesId.SID);
   try {
     const [rows] = await pool.query(
-      "DELETE FROM puchase_inventory WHERE PIID = ?",
-      [puchaseId.PIID]
+      "DELETE FROM purchased_inventory WHERE PIID = ?",
+      [purchaseId.PIID]
     );
-    res.json({ message: "Sales Deleted" });
+    res.status(200).json({ message: "purchase Deleted" });
   } catch (error) {
-    res.json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };

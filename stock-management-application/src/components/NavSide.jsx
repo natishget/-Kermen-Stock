@@ -21,8 +21,8 @@ const NavSide = () => {
   const [value, setValue] = useState(1);
   const[isAdmin, setIsAdmin] = useState(false);
   let att =
-    `pl-4 py-5 flex gap-2 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-8 bg-gray-100 ml-2 `;
-  let att2 = `pl-4 py-4 flex items-center gap-2 text-xl mt-8 border border-black rounded justify-center mx-2  hover:text-gray-800`;
+    `pl-4 py-5 flex gap-2 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-6 bg-gray-100 ml-2 `;
+  let att2 = `pl-4 py-4 flex items-center gap-2 text-xl mt-6 border border-black rounded justify-center mx-2  hover:text-gray-800`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +71,9 @@ const NavSide = () => {
         break;
       case "/pages/cogs":
         setValue(7);
+        break;
+      case "/pages/user-management":
+        setValue(8);
         break;
       default:
         setValue(0);
@@ -126,6 +129,10 @@ const NavSide = () => {
         <Link to="/pages/cogs" className={ isAdmin ? (value === 7 ? att : att2) : "hidden" }>
           <Calculator />
           COGS
+        </Link>
+        <Link to="/pages/user-management" className={ isAdmin ? (value === 8 ? att : att2) : "hidden" }>
+          <Calculator />
+          User Management
         </Link>
       </div>
       <div

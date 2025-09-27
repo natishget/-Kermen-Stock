@@ -22,23 +22,19 @@ export const makeSalesHandler = async (req, res) => {
   console.log("creating multiple sales in process");
 
   const sales = req.body; // Expecting an array of sales
-  
 
   // Ensure that we received an array of sales
   if (!Array.isArray(sales) || sales.length === 0 || !sales) {
-    return res
-      .status(400)
-      .json({ error: "Cart is Empty!" });
+    return res.status(400).json({ error: "Cart is Empty!" });
   }
 
   try {
-    
     // Start a transaction
     await pool.query("START TRANSACTION");
 
     // Process each sale
     for (const sale of sales) {
-      console.log("sale",sale)
+      console.log("sale", sale);
       const {
         product_id,
         quantity,
@@ -76,13 +72,11 @@ export const makeSalesHandler = async (req, res) => {
     // Commit the transaction if all sales were successful
     await pool.query("COMMIT");
 
-    res.status(200).json({message: "Sales Successfully"})
-
-    
+    res.status(200).json({ message: "Sales Successfully" });
   } catch (err) {
     // Rollback in case of any error
     await pool.query("ROLLBACK");
-    console.log("error",err);
+    console.log("error", err);
     return res.status(400).json({ error: err.sqlMessage });
   }
 };
@@ -94,7 +88,7 @@ export const handleEditSales = async (req, res) => {
     Quantity,
     Unit_price,
     Customer_Name,
-    Date,
+    Date: salesDate,
     Description,
     Color,
     isImported,
@@ -105,11 +99,12 @@ export const handleEditSales = async (req, res) => {
     Quantity,
     Unit_price,
     Customer_Name,
-    Date,
+    salesDate,
     Description,
     Color,
     isImported
   );
+
   try {
     const [rows] = await pool.query(
       "UPDATE sales SET PID = ?, Quantity = ?, Unit_price = ?, Customer_Name = ?, Date = ?, Description = ?, Total_Price = ?, Color = ?, isImported = ? WHERE SID = ?",
@@ -118,7 +113,7 @@ export const handleEditSales = async (req, res) => {
         Quantity,
         Unit_price,
         Customer_Name,
-        Date,
+        new Date(salesDate).toISOString().split("T")[0],
         Description,
         Quantity * Unit_price,
         Color.toUpperCase(),
@@ -126,9 +121,11 @@ export const handleEditSales = async (req, res) => {
         SID,
       ]
     );
-    res.json({ message: "Sales Edited" });
+    console.log("after update", rows);
+    res.status(200).json({ message: "Sales Edited" });
   } catch (error) {
-    res.json({ message: error.message });
+    console.log(error);
+    res.status(400).json({ message: error.message });
   }
 };
 
