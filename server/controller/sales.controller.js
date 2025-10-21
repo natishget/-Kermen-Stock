@@ -1,26 +1,19 @@
 import { pool } from "../config/db.js";
-import PDFDocument from "pdfkit";
 
 // view all the sales from the sales table
 export const allSalesHandler = async (req, res) => {
-  console.log("view all sales in process");
   try {
     const [rows] = await pool.query(
       "SELECT sales.*, product.Product_name FROM sales JOIN product ON sales.PID = product.PID"
     );
-    if (rows.length == 0) {
-      return res.status(400).json({ msg: "No Data found" });
-    }
-    console.log("successful");
-    return res.json(rows);
+
+    return res.status(200).json(rows);
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
 export const makeSalesHandler = async (req, res) => {
-  console.log("creating multiple sales in process");
-
   const sales = req.body; // Expecting an array of sales
 
   // Ensure that we received an array of sales
@@ -34,7 +27,6 @@ export const makeSalesHandler = async (req, res) => {
 
     // Process each sale
     for (const sale of sales) {
-      console.log("sale", sale);
       const {
         product_id,
         quantity,
@@ -75,7 +67,6 @@ export const makeSalesHandler = async (req, res) => {
   } catch (err) {
     // Rollback in case of any error
     await pool.query("ROLLBACK");
-    console.log("error", err);
     return res.status(400).json({ error: err.sqlMessage || err.message });
   }
 };
@@ -92,17 +83,6 @@ export const handleEditSales = async (req, res) => {
     Color,
     isImported,
   } = req.body;
-  console.log(
-    SID,
-    PID,
-    Quantity,
-    Unit_price,
-    Customer_Name,
-    salesDate,
-    Description,
-    Color,
-    isImported
-  );
 
   try {
     const [rows] = await pool.query(
@@ -120,24 +100,20 @@ export const handleEditSales = async (req, res) => {
         SID,
       ]
     );
-    console.log("after update", rows);
     res.status(200).json({ message: "Sales Edited" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
 
 export const handleDeleteSales = async (req, res) => {
   const salesId = req.body;
-
-  console.log(salesId.SID);
   try {
     const [rows] = await pool.query("DELETE FROM sales WHERE SID = ?", [
       salesId.SID,
     ]);
-    res.json({ message: "Sales Deleted" });
+    res.status(200).json({ message: "Sales Deleted" });
   } catch (error) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };

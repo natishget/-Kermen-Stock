@@ -8,101 +8,122 @@ export const calculateCOGSAndProfit = async (req, res) => {
     const endDate = "2025-12-31";
 
     // SQL Query with FIFO COGS Calculation
-    const sqlQuery = `
-    WITH SalesData AS (
-    -- Aggregate total sales per product
+    const sqlQuery = `WITH SalesData AS (
+    -- Aggregate total sales per product within the reporting period
     SELECT PID, Color, isImported, SUM(Quantity) AS TotalSold
-    FROM Sales
+    FROM sales
     WHERE Date BETWEEN ? AND ?
     GROUP BY PID, Color, isImported
 ),
 
+InventoryBase AS (
+    -- Combine all purchased inventory up to the end date (for FIFO layering)
+    SELECT PID, Color, isImported, Quantity, Unit_Price, Date
+    FROM purchased_inventory
+    WHERE Date <= ? -- Parameter 3: endDate
+
+    UNION ALL
+
+    -- Include beginning inventory, treating it as the oldest stock
+    SELECT PID, Color, isImported, Quantity, Unit_Price, '1900-01-01' AS Date
+    FROM beginning_inventory
+),
+
 InventoryBreakdown AS (
-    -- Compute running total of purchased inventory for FIFO allocation
-    SELECT 
-        p.PID, 
-        p.Color, 
-        p.isImported, 
-        p.Unit_Price, 
-        p.Quantity,
-        p.Date,
-        SUM(p.Quantity) OVER (
-            PARTITION BY p.PID, p.Color, p.isImported 
-            ORDER BY p.Date ASC 
+    -- Compute running total of inventory for FIFO allocation
+    SELECT
+        PID,
+        Color,
+        isImported,
+        Unit_Price,
+        Quantity,
+        Date,
+        SUM(Quantity) OVER (
+            PARTITION BY PID, Color, isImported
+            ORDER BY Date ASC
             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
         ) AS RunningTotal
-    FROM Purchased_inventory p
-    WHERE p.Date BETWEEN ? AND ?
+    FROM InventoryBase
 ),
 
 FIFO_COGS AS (
-    -- Allocate COGS based on FIFO logic
-    SELECT 
-        i.PID, 
-        i.Color, 
-        i.isImported, 
+    -- Allocate COGS based on FIFO logic against SalesData
+    SELECT
+        i.PID,
+        i.Color,
+        i.isImported,
         SUM(
-            CASE 
-                WHEN RunningTotal - Quantity < COALESCE(s.TotalSold, 0) 
+            CASE
+                -- Case 1: The current inventory layer is completely consumed by sales
+                WHEN RunningTotal - Quantity < COALESCE(s.TotalSold, 0)
                 THEN Quantity * Unit_Price
-                WHEN RunningTotal >= COALESCE(s.TotalSold, 0) 
+                -- Case 2: Only a portion of the current layer is needed for sales
+                WHEN RunningTotal >= COALESCE(s.TotalSold, 0)
                 THEN (COALESCE(s.TotalSold, 0) - (RunningTotal - Quantity)) * Unit_Price
-                ELSE 0 
+                -- Case 3: Sales were already fulfilled by older layers (or no sales)
+                ELSE 0
             END
         ) AS COGS
     FROM InventoryBreakdown i
-    LEFT JOIN SalesData s 
+    LEFT JOIN SalesData s
         ON i.PID = s.PID AND i.Color = s.Color AND i.isImported = s.isImported
     WHERE s.TotalSold IS NOT NULL
     GROUP BY i.PID, i.Color, i.isImported
 ),
 
 CombinedInventory AS (
-    -- Combine purchased inventory with beginning inventory
-    SELECT 
+    -- Calculate total quantity and total cost of inventory purchased within the reporting period + beginning inventory
+    SELECT
         PID,
         Color,
         isImported,
         SUM(Quantity) AS TotalQty,
         SUM(Quantity * Unit_Price) AS TotalCost
     FROM (
-        SELECT 
+        SELECT
             p.PID,
             p.Color,
             p.isImported,
             p.Quantity,
             p.Unit_Price
-        FROM Purchased_inventory p
-        WHERE p.Date BETWEEN ? AND ?
+        FROM purchased_inventory p
+        WHERE p.Date BETWEEN ? AND ? -- Parameters 4 & 5: startDate & endDate (for purchases in the period)
 
         UNION ALL
 
-        SELECT 
+        SELECT
             b.PID,
             b.Color,
             b.isImported,
             b.Quantity,
             b.Unit_Price
-        FROM Beginning_inventory b
+        FROM beginning_inventory b
     ) AS Inventory
     GROUP BY PID, Color, isImported
 ),
 
 SalesPrice AS (
-    -- Calculate average selling price per unit
-    SELECT 
+    -- Calculate average selling price per unit within the reporting period
+    SELECT
         PID,
         Color,
         isImported,
         AVG(Unit_Price) AS SalePricePerUnit
-    FROM Sales
-    WHERE Date BETWEEN ? AND ?
+    FROM sales
+    WHERE Date BETWEEN ? AND ? -- Parameters 6 & 7: startDate & endDate
     GROUP BY PID, Color, isImported
+),
+
+ProductNames AS (
+    -- NEW CTE: Get the product name for the final output
+    SELECT PID, Product_name AS ProductName
+    FROM product
 )
 
--- Final Output
-SELECT 
+-- Final Output: Join all metrics, including the new Product Name
+SELECT
     ci.PID,
+    pn.ProductName, -- <--- NEW FIELD
     ci.Color,
     ci.isImported,
     ci.TotalQty AS TotalQuantity,
@@ -112,30 +133,31 @@ SELECT
     cogs.COGS
 FROM CombinedInventory ci
 LEFT JOIN SalesPrice sp
-    ON ci.PID = sp.PID 
-    AND ci.Color = sp.Color 
+    ON ci.PID = sp.PID
+    AND ci.Color = sp.Color
     AND ci.isImported = sp.isImported
 LEFT JOIN FIFO_COGS cogs
-    ON ci.PID = cogs.PID 
-    AND ci.Color = cogs.Color 
-    AND ci.isImported = cogs.isImported;
-    `;
+    ON ci.PID = cogs.PID
+    AND ci.Color = cogs.Color
+    AND ci.isImported = cogs.isImported
+LEFT JOIN ProductNames pn -- <--- NEW JOIN
+    ON ci.PID = pn.PID;
+`;
 
     // Execute the Query
     const [rows] = await pool.execute(sqlQuery, [
-      startDate,
-      endDate, // SalesData
-      startDate,
-      endDate, // FIFO_COGS
-      startDate,
-      endDate, // CombinedInventory
-      startDate,
-      endDate, // SalesPrice
+      startDate, // 1
+      endDate, // 2
+      endDate, // 3
+      startDate, // 4
+      endDate, // 5
+      startDate, // 6
+      endDate, // 7
     ]);
 
     console.log("Rows:", rows);
 
-    res.status(200).json({ success: true, data: rows });
+    res.status(200).json({ message: rows });
   } catch (error) {
     console.error("Error fetching inventory metrics:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });

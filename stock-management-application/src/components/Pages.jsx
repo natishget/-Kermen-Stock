@@ -51,7 +51,9 @@ const Pages = () => {
     } else if (location.pathname === "/pages/cart") {
       setCurrentPath("Carts");
     } else if (location.pathname === "/pages/user-management") {
-      setCurrentPath("Carts");
+      setCurrentPath("Users");
+    } else if (location.pathname === "/pages/cogs") {
+      setCurrentPath("Finance");
     } else {
       setCurrentPath("");
     }

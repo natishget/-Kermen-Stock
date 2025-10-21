@@ -29,7 +29,6 @@ const Cart = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(`${BackEndURL}/sales/makeSales`, cart);
-      console.log("response", response);
       setIsQuotation(false);
       generatePDF(cart);
       clearCart();
@@ -48,6 +47,9 @@ const Cart = () => {
   const generatePDF = (cart) => {
     const doc = new jsPDF();
     let count = 0;
+    if (cart.length === 0) {
+      return alert("Cart is Empty!!!");
+    }
     autoTable(doc, {
       head: [["No", "Product ID", "Quantity", "Color", "Imported", "Date"]],
       body: cart.map((item) => [
