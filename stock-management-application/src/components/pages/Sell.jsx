@@ -64,8 +64,15 @@ const Sell = () => {
           throw new Error("Insufficient quantity");
         }
       })
-      .catch((err) => {
-        alert(err instanceof Error ? err.message : "An error occurred");
+      .catch((error) => {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+        alert(error instanceof Error ? err.message : "An error occurred");
       });
   };
 
@@ -89,7 +96,6 @@ const Sell = () => {
   };
 
   const handleOptionChange = (e) => {
-   
     data.isimported === 1
       ? setData({ ...data, isimported: 0 })
       : setData({ ...data, isimported: 1 });
@@ -101,27 +107,27 @@ const Sell = () => {
         <form
           action=""
           onSubmit={handleSubmit}
-          className="w-full flex-col justify-center items-center pl-10 md:pb-20 pt-5"
+          className="w-full bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 md:pb-20 pt-5"
         >
           <h1 className="md:text-4xl text-3xl font-bold">
             Sell <span className="text-blue-300">Now</span>
           </h1>
-          <p className="text-xs pt-3 pb-7">Place to make growth!!</p>
-          <label htmlFor="" className="text-xs pt-1">
+          <p className=" pt-3 pb-7">Place to make growth!!</p>
+          <label htmlFor="" className=" pt-1">
             Product Name
           </label>
           <br />
           <select
             name="product_id"
             onChange={handleChange}
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           >
             {products.map((product) => (
               <option value={product?.PID}>{product?.Product_name}</option>
             ))}
           </select>
           <br />
-          <label htmlFor="" className="text-xs mt-16">
+          <label htmlFor="" className=" mt-16">
             Quantity
           </label>
           <br />
@@ -131,10 +137,10 @@ const Sell = () => {
             onChange={handleChange}
             id=""
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="date" className="text-xs pt-28">
+          <label htmlFor="date" className=" pt-28">
             Date
           </label>
           <br />
@@ -144,10 +150,10 @@ const Sell = () => {
             onChange={handleChange}
             id="date"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="price" className="text-xs pt-28">
+          <label htmlFor="price" className=" pt-28">
             Unit price
           </label>
           <br />
@@ -157,10 +163,10 @@ const Sell = () => {
             name="unit_price"
             id="price"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="color" className="text-xs pt-28">
+          <label htmlFor="color" className=" pt-28">
             Color
           </label>
           <br />
@@ -170,11 +176,11 @@ const Sell = () => {
             name="color"
             id="price"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
 
           <br />
-          <label htmlFor="customer" className="text-xs pt-28">
+          <label htmlFor="customer" className=" pt-28">
             Customer Name /Optional/
           </label>
           <br />
@@ -184,10 +190,10 @@ const Sell = () => {
             name="customer"
             id="customer"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
-          <label htmlFor="description" className="text-xs pt-28">
+          <label htmlFor="description" className=" pt-28">
             Description
           </label>
           <br />
@@ -197,11 +203,11 @@ const Sell = () => {
             name="description"
             id="description"
             required
-            className="placeholder:italic placeholder:text-slate-400 placeholder:text-xs border-white border-2 rounded-2xl bg-mybg p-2 w-11/12 mb-3"
+            className="placeholder:italic placeholder:text-slate-400 placeholder: border-white border-2 rounded-2xl bg-mybg p-2 w-11/12 mb-3"
           />
           <br />
 
-          <label htmlFor="isImported" className="text-xs">
+          <label htmlFor="isImported" className="">
             Imported
           </label>
           <input
@@ -215,7 +221,7 @@ const Sell = () => {
           <br />
           {/* <button
             type="submit"
-            className="rounded-full tracking-widest bg-blue-400 w-11/12 my-4 py-2.5 text-xs font-bold "
+            className="rounded-full tracking-widest bg-blue-400 w-11/12 my-4 py-2.5  font-bold "
           >
             SUBMIT
           </button> */}

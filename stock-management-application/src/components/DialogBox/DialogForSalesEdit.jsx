@@ -20,11 +20,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 // enviroment varibale
-const BAckEndURL = import.meta.env.VITE_BACKEND_URL;
+const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const DialogForSalesEdit = ({ salesData }) => {
+  const navigate = useNavigate();
   const [editedSale, setEditedSale] = useState({
     SID: salesData?.SID,
     PID: salesData?.PID,
@@ -40,15 +42,13 @@ const DialogForSalesEdit = ({ salesData }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log("editedSale", editedSale);
-  }, [editedSale]);
-  useEffect(() => {
     if (
       sessionStorage.getItem("products") === null ||
       sessionStorage.getItem("products") === undefined
     ) {
       const fetchProducts = async () => {
         try {
+          console.log("fetching again");
           const response = await axios.get(`${BackEndURL}/product/getProducts`);
           sessionStorage.setItem("products", JSON.stringify(response.data));
           setProducts(response.data);
@@ -68,7 +68,6 @@ const DialogForSalesEdit = ({ salesData }) => {
   };
 
   const handleOptionChange = (e) => {
-    console.log("checkbox clicked");
     editedSale.isImported === 1
       ? setEditedSale({ ...editedSale, isImported: 0 })
       : setEditedSale({ ...editedSale, isImported: 1 });
@@ -76,7 +75,6 @@ const DialogForSalesEdit = ({ salesData }) => {
 
   const handleChange = (value) => {
     setEditedSale({ ...editedSale, PID: value });
-    console.log(value + "\n" + editedSale);
   };
 
   const handleEditSales = async () => {
@@ -94,13 +92,15 @@ const DialogForSalesEdit = ({ salesData }) => {
       ) {
         throw new Error("Every field on the form should be properly field");
       }
-      const response = axios.post(
+      const response = await axios.post(
         `${BackEndURL}/sales/updateSales`,
         editedSale
       );
-      alert("Sales Edited");
+      sessionStorage.removeItem("sales");
+      navigate(0);
     } catch (error) {
       alert(error.message);
+      console.clear();
     }
   };
 

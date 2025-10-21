@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import DialogForAddProduct from "./DialogBox/DialogForAddProduct";
-import logo from "../assets/kermen_logo.png";
+import logo from "../assets/kermen_logo2.png";
 import Cart_png from "../assets/shopping-cart.png";
 import NavSide from "./NavSide";
 import Home from "../components/pages/Home";
@@ -18,7 +18,7 @@ import Sales from "../components/pages/Sales";
 import Develop from "../components//pages/InventoryLevel";
 import Cart from "./pages/Cart";
 import COGS from "./pages/COGS";
-import CartImg from "../assets/icons/cart.svg";
+import UserManagement from "./pages/UserManagement";
 
 import axios from "axios";
 import DialogForAddUser from "./DialogBox/DialogForAddUser";
@@ -36,7 +36,7 @@ const Pages = () => {
   // axios credentials
   axios.defaults.withCredentials = true;
   useEffect(() => {
-    if (location.pathname === "/pages/") {
+    if (location.pathname === "/pages/" || location.pathname === "/pages") {
       setCurrentPath("Home");
     } else if (location.pathname === "/pages/sell") {
       setCurrentPath("Sell Now");
@@ -49,6 +49,8 @@ const Pages = () => {
     } else if (location.pathname === "/pages/inventory") {
       setCurrentPath("Inventory Levels");
     } else if (location.pathname === "/pages/cart") {
+      setCurrentPath("Carts");
+    } else if (location.pathname === "/pages/user-management") {
       setCurrentPath("Carts");
     } else {
       setCurrentPath("");
@@ -75,10 +77,10 @@ const Pages = () => {
   }, []);
 
   return (
-    <div className="bg-mybg h-screen w-full text-white overflow-hidden ">
-      <header className="bg-mycolor h-[13%] flex justify-between items-center">
+    <div className="bg-gray-100 h-screen w-full text-white overflow-hidden ">
+      <header className="bg-mycolor h-[13%] flex justify-between items-center drop-shadow-xl">
         <img src={logo} alt="Kermen logo" className="w-32 h-16 p-2" />
-        <p className="self-center text-white font-bold">
+        <p className="self-center text-xl text-gray-600 font-bold">
           Stock Management Application -
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
@@ -91,7 +93,7 @@ const Pages = () => {
         </div>
       </header>
 
-      <div className="flex h-full">
+      <div className="flex gap-5 h-[87%]">
         <NavSide />
         {/* <BrowserRouter> */}
         <Routes>
@@ -103,6 +105,7 @@ const Pages = () => {
           <Route path="inventory" element={<Develop />} />
           <Route path="cart" element={<Cart />} />
           <Route path="cogs" element={<COGS />} />
+          <Route path="user-management" element={<UserManagement />} />
         </Routes>
         {/* </BrowserRouter>  */}
       </div>

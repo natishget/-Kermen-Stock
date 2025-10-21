@@ -20,11 +20,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const DialogForPurchaseEdit = ({ PurchaseData }) => {
+  const navigate = useNavigate();
   const [editedPurchase, setEditedPurchase] = useState({
     PIID: PurchaseData?.PIID,
     PID: PurchaseData?.PID,
@@ -70,7 +72,6 @@ const DialogForPurchaseEdit = ({ PurchaseData }) => {
   };
 
   const handleOptionChange = (e) => {
-    console.log("checkbox clicked");
     editedPurchase.isImported === 1
       ? setEditedPurchase({ ...editedPurchase, isImported: 0 })
       : setEditedPurchase({ ...editedPurchase, isImported: 1 });
@@ -78,13 +79,12 @@ const DialogForPurchaseEdit = ({ PurchaseData }) => {
 
   const handleChange = (value) => {
     setEditedPurchase({ ...editedPurchase, PID: value });
-    console.log(value + "\n" + editedPurchase);
   };
 
   const handleEditPurchase = async () => {
     try {
       if (
-        editedPurchase.SID === "" ||
+        editedPurchase.PIID === "" ||
         editedPurchase.PID === "" ||
         editedPurchase.Color === "" ||
         editedPurchase.Seller === "" ||
@@ -96,11 +96,12 @@ const DialogForPurchaseEdit = ({ PurchaseData }) => {
       ) {
         throw new Error("Every field on the form should be properly field");
       }
-      const response = axios.post(
+      const response = await axios.post(
         `${BackEndURL}/purchase/editPurchase`,
         editedPurchase
       );
-      alert("Purchase Edited");
+      sessionStorage.removeItem("purchases");
+      navigate(0);
     } catch (error) {
       alert(error.message);
     }
@@ -191,7 +192,7 @@ const DialogForPurchaseEdit = ({ PurchaseData }) => {
               Unit Price:
             </Label>
             <Input
-              name="Unit_price"
+              name="Unit_Price"
               onChange={(e) => {
                 handleEditedPurchase(e);
               }}

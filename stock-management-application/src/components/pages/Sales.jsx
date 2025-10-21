@@ -12,25 +12,48 @@ import {
   Email as EmailIcon,
 } from "@mui/icons-material";
 import DialogForSalesEdit from "../DialogBox/DialogForSalesEdit";
+import { useNavigate } from "react-router-dom";
 
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Sales = () => {
+  const navigate = useNavigate();
   const [allSales, setAllSales] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [editedSale, setEditedSale] = useState({
-    SID: "",
-    PID: "",
-    Quantity: "",
-    Unit_price: 10,
-    Customer_Name: "natnael",
-    Date: "",
-    Description: "",
-    Color: "",
-    isImported: "",
-  });
-  const [edit, setEdit] = useState({ dere: "43" });
+
+  useEffect(() => {
+    if (
+      sessionStorage.getItem("sales") === null ||
+      sessionStorage.getItem("sales") === undefined
+    ) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`${BackEndURL}/sales/allSales`, {
+            withCredentials: true,
+          });
+          setAllSales(response.data);
+          sessionStorage.setItem("sales", JSON.stringify(response.data));
+        } catch (error) {
+          console.clear();
+          if (error.response) {
+            alert(error.response.data.message);
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("Error: " + error.message);
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchData();
+    } else {
+      const sales = JSON.parse(sessionStorage.getItem("sales"));
+      setAllSales(sales);
+      setIsLoading(false);
+    }
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -57,7 +80,12 @@ const Sales = () => {
       },
       {
         accessorKey: "Unit_price",
-        header: "Price",
+        header: "Unit Price",
+        size: 70,
+      },
+      {
+        accessorKey: "Total_Price",
+        header: "Total Price",
         size: 70,
       },
       {
@@ -95,17 +123,17 @@ const Sales = () => {
           background: {
             default:
               globalTheme.palette.mode === "light"
-                ? "rgb(22,32,42,255)" //random light yellow color for the background in light mode
+                ? "rgba(255,255, 255,1)" //random light yellow color for the background in light mode
                 : "#000", //pure black table in dark mode for fun
           },
           text: {
-            primary: "#c0c2be",
+            primary: "#3b3b3bff",
           },
         },
         typography: {
           button: {
             textTransform: "none", //customize typography styles for all buttons in table by default
-            fontSize: "1.2rem",
+            fontSize: "2.2rem",
           },
         },
         components: {
@@ -143,7 +171,7 @@ const Sales = () => {
           MuiSvgIcon: {
             styleOverrides: {
               root: {
-                color: "#d9d4c5", // Custom color for icons like filter
+                color: "#000000ff", // Custom color for icons like filter
               },
             },
           },
@@ -159,44 +187,6 @@ const Sales = () => {
     [globalTheme]
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BackEndURL}/sales/allSales`, {
-          withCredentials: true,
-        });
-        setAllSales(response.data);
-      } catch (error) {
-        console.log(error.response.data.msg);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleEditedSale = (e) => {
-    const { name, value } = e.target;
-    setEditedSale({ ...editedSale, [name]: value });
-  };
-
-  const handleChange = (e) => {
-    setEdit({ ...edit, [e.target.name]: e.target.value });
-    console.log(e.target.name + e.target.value + "\n" + edit);
-  };
-
-  const handleEditSales = async () => {
-    try {
-      const response = axios.post(
-        `${BackEndURL}/sales/updateSales`,
-        editedSale
-      );
-      alert("Sales Updated");
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
   const handleDeleteSales = async (SID) => {
     console.log("sid", SID);
     const data = {
@@ -207,8 +197,11 @@ const Sales = () => {
         `${BackEndURL}/sales/deleteSales`,
         data
       );
+      sessionStorage.removeItem("sales");
+      navigate(0);
       alert("Sales Deleted");
     } catch (error) {
+      console.clear();
       alert(error.response.data.message);
     }
   };
@@ -228,7 +221,10 @@ const Sales = () => {
 
   return (
     <>
-      <div className="col-span-4 row-span-3 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+      <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+        <h1 className="text-gray-600 font-bold text-4xl">
+          <span className="text-blue-500">Sales</span> Table
+        </h1>
         <div className="bg-black">
           <ThemeProvider theme={tableTheme}>
             <MaterialReactTable
@@ -249,7 +245,6 @@ const Sales = () => {
                   <IconButton
                     sx={{ color: "#1e88e5" }}
                     onClick={() => {
-                      console.log(row.original);
                       setEditedSale({
                         SID: row.original.SID,
                         PID: row.original.PID,
@@ -263,7 +258,10 @@ const Sales = () => {
                       });
                     }}
                   >
-                    <DialogForSalesEdit salesData={row.original} />
+                    <DialogForSalesEdit
+                      salesData={row.original}
+                      key={row.original.SID}
+                    />
                   </IconButton>
                   <IconButton
                     color="error"

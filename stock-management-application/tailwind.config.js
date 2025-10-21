@@ -18,8 +18,10 @@ module.exports = {
     },
     extend: {
       colors: {
-        mybg: "rgb(22,32,42,255)",
-        mycolor: "rgba(38,49,60,255)",
+        // mybg: "rgb(22,32,42,255)",
+        // mycolor: "rgba(38,49,60,255)",
+        mybg: "rgba(240, 240, 240, 1)",
+        mycolor: "rgba(255, 255,255,1)",
         mybtn: "rgb(93, 95, 239)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

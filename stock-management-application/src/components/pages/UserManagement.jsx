@@ -11,64 +11,28 @@ import {
   Delete as DeleteIcon,
   Email as EmailIcon,
 } from "@mui/icons-material";
-import DialogForPurchaseEdit from "../DialogBox/DialogForPurchaseEdit";
-import { useNavigate } from "react-router-dom";
 
-// enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
-const Purchase = () => {
-  const navigate = useNavigate();
-  const [allPurchases, setAllPurchases] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+const UserManagement = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState([]);
   const columns = useMemo(
     () => [
       {
-        accessorKey: "Product_name", //access nested data with dot notation
-        header: "Product Name",
+        accessorKey: "User_Name", //access nested data with dot notation
+        header: " Username",
         size: 110,
       },
       {
-        accessorKey: "Quantity",
-        header: "Quantity",
-        size: 70,
-      },
-      {
-        accessorKey: "Date", //normal accessorKey
-        header: "Purchase Date",
+        accessorKey: "Email",
+        header: "email",
         size: 190,
-        Cell: ({ cell }) => formatDate(cell.getValue()),
       },
       {
-        accessorKey: "Description",
-        header: "Description",
-        size: 150,
-      },
-      {
-        accessorKey: "Unit_Price",
-        header: "Unit Price",
-        size: 70,
-      },
-      {
-        accessorKey: "Total_Price",
-        header: "Total Price",
-        size: 70,
-      },
-      {
-        accessorKey: "Color",
-        header: "Color",
-        size: 70,
-      },
-      {
-        accessorKey: "isImported",
-        header: "Is Imported",
-        size: 70,
-      },
-      {
-        accessorKey: "Seller",
-        header: "Seller",
-        size: 110,
+        accessorKey: "User_Type", //normal accessorKey
+        header: "User Type",
+        size: 190,
       },
     ],
     []
@@ -154,84 +118,39 @@ const Purchase = () => {
   );
 
   useEffect(() => {
-    if (
-      sessionStorage.getItem("purchases") === null ||
-      sessionStorage.getItem("purchases") === undefined
-    ) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `${BackEndURL}/purchase/allPurchase`,
-            {
-              withCredentials: true,
-            }
-          );
-          setAllPurchases(response.data);
-          sessionStorage.setItem("purchases", JSON.stringify(response.data));
-        } catch (error) {
-          if (error.response) {
-            alert(error.response.data.message);
-          } else if (error.request) {
-            alert("No response from server. Please try again.");
-          } else {
-            alert("Error: " + error.message);
-          }
-        } finally {
-          setIsLoading(false);
+    const fetchData = async () => {
+      console.log("fetching all users");
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${BackEndURL}/user/getAllUsers`, {
+          withCredentials: true,
+        });
+        // console.log("user data", response);
+        setUserData(response.data);
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
         }
-      };
-      fetchData();
-    } else {
-      const purchases = JSON.parse(sessionStorage.getItem("purchases"));
-      setAllPurchases(purchases);
-      setIsLoading(false);
-    }
-  }, []);
-
-  const handleDeletePurchase = async (PIID) => {
-    const data = {
-      PIID: PIID,
-    };
-    try {
-      const response = await axios.post(
-        `${BackEndURL}/purchase/deletePurchase`,
-        data
-      );
-      sessionStorage.removeItem("purchases");
-      navigate(0);
-    } catch (error) {
-      if (error.response) {
-        alert(error.response.data.message);
-      } else if (error.request) {
-        alert("No response from server. Please try again.");
-      } else {
-        alert("Error: " + error.message);
+      } finally {
+        setIsLoading(false);
       }
-    }
-  };
-
-  const formatDate = (dataTimeString) => {
-    const date = new Date(dataTimeString);
-    return date.toLocaleDateString();
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex w-full h-full justify-center items-center px-6 py-4 font-medium text-2xl text-gray-500 whitespace-nowrap dark:text-white">
-        Loading...
-      </div>
-    );
-  }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
       <h1 className="text-gray-600 font-bold text-4xl">
-        <span className="text-yellow-500">Purchase</span> Table
+        <span className="text-yellow-500">User</span> Management
       </h1>
       <ThemeProvider theme={tableTheme}>
         <MaterialReactTable
           columns={columns}
-          data={allPurchases}
+          data={userData}
           enableColumnOrdering
           enableColumnPinning
           enableRowActions
@@ -248,27 +167,25 @@ const Purchase = () => {
                 sx={{ color: "#1e88e5" }}
                 onClick={() => {
                   console.log(row.original);
-                  setEditedSale({
-                    PID: row.original.PID,
-                    Quantity: row.original.Quantity,
-                    Unit_price: row.original.Unit_price,
-                    Customer_Name: row.original.Customer_Name,
-                    Date: row.original.Date,
-                    Description: row.original.Description,
-                  });
+                  // setEditedSale({
+                  //   PID: row.original.PID,
+                  //   Quantity: row.original.Quantity,
+                  //   Unit_price: row.original.Unit_price,
+                  //   Customer_Name: row.original.Customer_Name,
+                  //   Date: row.original.Date,
+                  //   Description: row.original.Description,
+                  // });
                 }}
-              >
-                <DialogForPurchaseEdit
-                  PurchaseData={row.original}
-                  key={row.original.PID}
-                />
-              </IconButton>
+              ></IconButton>
               <IconButton
                 color="error"
                 onClick={() => {
-                  handleDeletePurchase(row.original.PIID);
+                  // handleDeletePurchase(row.original.PIID);
                 }}
               >
+                {/* <DialogForPurchaseEdit
+                // PurchaseData={row.original}
+                /> */}
                 <DeleteIcon sx={{ color: "#d44c3d" }} />
               </IconButton>
             </Box>
@@ -279,4 +196,4 @@ const Purchase = () => {
   );
 };
 
-export default Purchase;
+export default UserManagement;

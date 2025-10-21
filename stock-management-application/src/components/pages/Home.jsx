@@ -4,6 +4,9 @@ import Card2 from "../Card2";
 import LineChart from "../charts/LineGraph";
 import axios from "axios";
 
+
+
+
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -37,7 +40,7 @@ const Home = ({ userData }) => {
     fetchData();
   }, []);
   return (
-    <div className="w-full flex-col overflow-hidden md:no-scrollbar hover:overflow-y-scroll">
+    <div className="w-full flex-col overflow-hidden md:no-scrollbar hover:overflow-y-scroll drop-shadow-xl">
       <div className="w-full flex mt-5 justify-around">
         <Card
           name={"Sales"}
