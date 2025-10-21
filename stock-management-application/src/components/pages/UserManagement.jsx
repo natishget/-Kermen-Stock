@@ -4,19 +4,21 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { createTheme, ThemeProvider, useTheme } from "@mui/material";
+import { createTheme, ThemeProvider, useTheme, withTheme } from "@mui/material";
 import { Box, IconButton } from "@mui/material";
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Email as EmailIcon,
 } from "@mui/icons-material";
+import NotFound from "@/assets/2480259.jpg";
 
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const UserManagement = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState([]);
+  const [isAdmin, setIsAdmin] = useState();
   const columns = useMemo(
     () => [
       {
@@ -119,6 +121,28 @@ const UserManagement = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BackEndURL}/auth/protectedRoute`, {
+          withCredentials: true,
+        });
+
+        setIsAdmin(response?.data?.user?.userType === "admin" ? true : false);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
+        console.log("error", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
       console.log("fetching all users");
       setIsLoading(true);
       try {
@@ -142,6 +166,14 @@ const UserManagement = () => {
     fetchData();
   }, []);
 
+  if (!isAdmin) {
+    return (
+      <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+        <img src={NotFound} alt="not found image" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
       <h1 className="text-gray-600 font-bold text-4xl">
@@ -153,43 +185,43 @@ const UserManagement = () => {
           data={userData}
           enableColumnOrdering
           enableColumnPinning
-          enableRowActions
-          positionActionsColumn={`last`}
-          renderRowActions={({ row, table }) => (
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "nowrap",
-                gap: "8px",
-              }}
-            >
-              <IconButton
-                sx={{ color: "#1e88e5" }}
-                onClick={() => {
-                  console.log(row.original);
-                  // setEditedSale({
-                  //   PID: row.original.PID,
-                  //   Quantity: row.original.Quantity,
-                  //   Unit_price: row.original.Unit_price,
-                  //   Customer_Name: row.original.Customer_Name,
-                  //   Date: row.original.Date,
-                  //   Description: row.original.Description,
-                  // });
-                }}
-              ></IconButton>
-              <IconButton
-                color="error"
-                onClick={() => {
-                  // handleDeletePurchase(row.original.PIID);
-                }}
-              >
-                {/* <DialogForPurchaseEdit
-                // PurchaseData={row.original}
-                /> */}
-                <DeleteIcon sx={{ color: "#d44c3d" }} />
-              </IconButton>
-            </Box>
-          )}
+          //enableRowActions
+          // positionActionsColumn={`last`}
+          // renderRowActions={({ row, table }) => (
+          //   // <Box
+          //   //   sx={{
+          //   //     display: "flex",
+          //   //     flexWrap: "nowrap",
+          //   //     gap: "8px",
+          //   //   }}
+          //   // >
+          //   //   <IconButton
+          //   //     sx={{ color: "#1e88e5" }}
+          //   //     onClick={() => {
+          //   //       console.log(row.original);
+          //   //       // setEditedSale({
+          //   //       //   PID: row.original.PID,
+          //   //       //   Quantity: row.original.Quantity,
+          //   //       //   Unit_price: row.original.Unit_price,
+          //   //       //   Customer_Name: row.original.Customer_Name,
+          //   //       //   Date: row.original.Date,
+          //   //       //   Description: row.original.Description,
+          //   //       // });
+          //   //     }}
+          //   //   ></IconButton>
+          //   //   <IconButton
+          //   //     color="error"
+          //   //     onClick={() => {
+          //   //       // handleDeletePurchase(row.original.PIID);
+          //   //     }}
+          //   //   >
+          //   //     {/* <DialogForPurchaseEdit
+          //   //     // PurchaseData={row.original}
+          //   //     /> */}
+          //   //     <DeleteIcon sx={{ color: "#d44c3d" }} />
+          //   //   </IconButton>
+          //   // </Box>
+          // )}
         />
       </ThemeProvider>
     </div>

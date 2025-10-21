@@ -63,13 +63,15 @@ const Buy = () => {
           data,
           { withCredentials: true }
         );
-
-        console.log(response.data);
-        if (response.data === "1") {
-          alert("successfully purchased");
-        }
+        alert("Purchased Completed");
       } catch (error) {
-        alert(error);
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
       }
     }
   };
@@ -100,9 +102,7 @@ const Buy = () => {
           <h1 className="md:text-4xl text-3xl font-bold">
             Buy <span className="text-yellow-500">Now</span>
           </h1>
-          <p className=" pt-3 pb-7">
-            Small purchase makes a big difference
-          </p>
+          <p className=" pt-3 pb-7">Small purchase makes a big difference</p>
           <label htmlFor="" className="pt-28">
             Product ID
           </label>
