@@ -200,7 +200,13 @@ const Purchase = () => {
       sessionStorage.removeItem("purchases");
       navigate(0);
     } catch (error) {
-      alert(error.response.data.message);
+      if (error.response) {
+        alert(error.response.data.message);
+      } else if (error.request) {
+        alert("No response from server. Please try again.");
+      } else {
+        alert("Error: " + error.message);
+      }
     }
   };
 

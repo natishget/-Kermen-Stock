@@ -128,7 +128,13 @@ const UserManagement = () => {
         // console.log("user data", response);
         setUserData(response.data);
       } catch (error) {
-        console.log("Error on user management while fetching", error);
+        if (error.response) {
+          alert(error.response.data.message);
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error: " + error.message);
+        }
       } finally {
         setIsLoading(false);
       }

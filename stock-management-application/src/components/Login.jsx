@@ -28,7 +28,6 @@ const Login = () => {
         } else {
           alert("Error: " + error.message);
         }
-        console.log("error", error);
       }
     };
     fetchData();
@@ -59,7 +58,6 @@ const Login = () => {
         } else {
           alert("Error: " + error.message);
         }
-        console.log("error", error);
       }
     }
   };

@@ -10,3 +10,19 @@ export const allUsers = async (req, res) => {
     return res.status(400).json(error.message);
   }
 };
+
+export const editUserInfo = async (req, res) => {
+  const { username, password, email, userType, newUserName } = req.body;
+  try {
+    const [rows] = await pool.query(
+      " UPDATE user_table SET User_Name = ?, Password = ?, Email = ?, User_Type = ? WHERE User_Name = ?",
+      [newUserName, password, email, userType, username]
+    );
+    res.status(200).json({ message: "Sucessfully updated" });
+  } catch (error) {
+    console.log(" error when trying to edit use info", error);
+    res
+      .status(200)
+      .json({ error: "error occured please check backend console" });
+  }
+};

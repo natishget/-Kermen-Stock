@@ -36,7 +36,13 @@ const Sales = () => {
           sessionStorage.setItem("sales", JSON.stringify(response.data));
         } catch (error) {
           console.clear();
-          alert(error.response.data.msg);
+          if (error.response) {
+            alert(error.response.data.message);
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("Error: " + error.message);
+          }
         } finally {
           setIsLoading(false);
         }

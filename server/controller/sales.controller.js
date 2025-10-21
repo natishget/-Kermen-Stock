@@ -57,11 +57,10 @@ export const makeSalesHandler = async (req, res) => {
           description,
           unit_price,
           customer,
-          color,
+          color.toUpperCase(),
           isimported,
         ]
       );
-      console.log("rows result", rows);
 
       // if (rows.length === 0) {
       //   await pool.query("ROLLBACK");
@@ -77,7 +76,7 @@ export const makeSalesHandler = async (req, res) => {
     // Rollback in case of any error
     await pool.query("ROLLBACK");
     console.log("error", err);
-    return res.status(400).json({ error: err.sqlMessage });
+    return res.status(400).json({ error: err.sqlMessage || err.message });
   }
 };
 
