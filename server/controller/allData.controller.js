@@ -36,9 +36,6 @@ export const getAllDataHandler = async (req, res) => {
        ORDER BY MIN(Date);`
     );
 
-    console.log("Monthly Sales Data:", monthlySalesRows);
-    console.log("Monthly Purchase Data:", monthlyPurchaseRows);
-
     // Parse total values
     const totalSalesPrice = parseFloat(salesRows[0].TotalSalesPrice) || 0;
     const salesCount = parseInt(salesRows[0].SalesCount) || 0;
@@ -57,13 +54,6 @@ export const getAllDataHandler = async (req, res) => {
     const combinedPurchasedInventoryCount =
       beginningInventoryCount + purchasedInventoryCount;
 
-    console.log(
-      `Sales Total: ${totalSalesPrice}
-       Sales Count: ${salesCount}
-       Purchase Total: ${combinedTotalPurchasedPrice}
-       Purchase Count: ${combinedPurchasedInventoryCount}`
-    );
-
     // Prepare the response
     const retrievedData = {
       totalSalesPrice,
@@ -80,7 +70,7 @@ export const getAllDataHandler = async (req, res) => {
       })),
     };
 
-    res.json(retrievedData);
+    res.status(200).json(retrievedData);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });

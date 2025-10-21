@@ -9,7 +9,7 @@ export const addNewProduct = async (req, res) => {
       "INSERT INTO product ( Product_name, Description, Unit_of_measurement) VALUES (?, ?, ?)",
       [product_name, description, unit_of_measurment]
     );
-    res.json({ message: "Product Added" });
+    res.status(200).json({ message: "Product Added" });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -20,7 +20,7 @@ export const getProducts = async (req, res) => {
   console.log("getting all products");
   try {
     const [rows] = await pool.query("SELECT * FROM product");
-    res.json(rows);
+    res.status(200).json(rows);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });

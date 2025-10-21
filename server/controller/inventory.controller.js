@@ -6,12 +6,8 @@ export const handleInventoryLevel = async (req, res) => {
     const [rows] = await pool.query(
       "SELECT inventory_level.*, product.Product_name FROM inventory_level JOIN product ON inventory_level.PID = product.PID"
     );
-    if (rows.length == 0) {
-      return res.json({ msg: "" });
-    }
-    console.log("successful");
-    return res.json(rows);
+    return res.status(200).json(rows);
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

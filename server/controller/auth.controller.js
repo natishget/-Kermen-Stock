@@ -11,13 +11,13 @@ export const loginHandler = async (req, res) => {
       "SELECT * FROM user_table WHERE User_Name = ? AND User_Type = ?",
       [username, isAdmin ? "admin" : "user"]
     );
-    
+
     if (rows.length === 0) {
-      return res.status(400).json({ message: "Username Or Password is Incorrect" });
+      return res
+        .status(400)
+        .json({ message: "Username or Password is Incorrect" });
     }
     if (isAdmin) {
-      
-      
       const admin = rows[0];
       const isMatch = await bcrypt.compare(password, admin.Password);
       if (isMatch) {
@@ -36,7 +36,9 @@ export const loginHandler = async (req, res) => {
         });
         return res.status(200).json({ message: "log in successfull" });
       } else {
-        return res.status(400).json({ message: "Username Or Password is Incorrect" });
+        return res
+          .status(400)
+          .json({ message: "Username Or Password is Incorrect" });
       }
     } else {
       // if the login user is not admin
@@ -58,11 +60,12 @@ export const loginHandler = async (req, res) => {
         });
         return res.status(200).json({ message: "logged in successfull" });
       } else {
-        return res.status(400).json({ message: "Username Or Password is Incorrect!" });
+        return res
+          .status(400)
+          .json({ message: "Username Or Password is Incorrect!" });
       }
     }
   } catch (error) {
-    console.log(error.message)
     res.status(500).json({ message: error.message });
   }
 };
@@ -72,10 +75,8 @@ export const createUserHandler = async (req, res) => {
   if (adminPass !== "AluKermen") {
     return res.status(400).json({ message: "Register Password is wrong" });
   }
-  console.log(username, password, isAdmin);
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
     const [rows] = await pool.query(
       "SELECT * FROM user_table WHERE User_Name = ?",
       [username]

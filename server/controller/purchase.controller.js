@@ -6,11 +6,7 @@ export const allPurchaseHandler = async (req, res) => {
     const [rows] = await pool.query(
       "SELECT purchased_inventory.*, product.Product_name FROM purchased_inventory JOIN product ON purchased_inventory.PID = product.PID"
     );
-    if (rows.length == 0) {
-      return res.json({ msg: "" });
-    }
-    console.log("successful");
-    return res.json(rows);
+    return res.status(200).json(rows);
   } catch (error) {
     res.status(400).json(error.message);
   }
@@ -29,8 +25,6 @@ export const makePurchaseHandler = async (req, res) => {
     color,
     isimported,
   } = req.body;
-  console.log("color", color);
-  console.log("isImported", isimported);
 
   try {
     const [rows] = await pool.query(
@@ -47,8 +41,7 @@ export const makePurchaseHandler = async (req, res) => {
         isimported,
       ]
     );
-    console.log("successful");
-    return res.status(200).json("1");
+    return res.status(200).json({ messgae: "Updated the inventory" });
   } catch (error) {
     res.status(400).json({ message: "Can't complete Purchase" });
   }
