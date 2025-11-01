@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const DialogForPurchaseEdit = ({ PurchaseData }) => {
+  console.log("PurchaseData", PurchaseData);
   const navigate = useNavigate();
   const [editedPurchase, setEditedPurchase] = useState({
     PIID: PurchaseData?.PIID,

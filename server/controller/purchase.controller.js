@@ -2,10 +2,30 @@ import { pool } from "../config/db.js";
 
 export const allPurchaseHandler = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
+
+    const offset = (page - 1) * limit;
     const [rows] = await pool.query(
-      "SELECT purchased_inventory.*, product.Product_name FROM purchased_inventory JOIN product ON purchased_inventory.PID = product.PID"
+      "SELECT purchased_inventory.*, product.Product_name FROM purchased_inventory JOIN product ON purchased_inventory.PID = product.PID LIMIT ? OFFSET ?",
+      [limit, offset]
     );
-    return res.status(200).json(rows);
+
+    const [totalRows] = await pool.query(
+      "SELECT COUNT(*) as total FROM purchased_inventory"
+    );
+    const totalCount = totalRows[0].total;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return res.status(200).json({
+      data: rows,
+      pagination: {
+        totalCount,
+        totalPages,
+        currentPage: page,
+        limit: limit,
+      },
+    });
   } catch (error) {
     res.status(400).json(error.message);
   }

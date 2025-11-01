@@ -3,13 +3,52 @@ import { pool } from "../config/db.js";
 // view all the sales from the sales table
 export const allSalesHandler = async (req, res) => {
   try {
-    const [rows] = await pool.query(
-      "SELECT sales.*, product.Product_name FROM sales JOIN product ON sales.PID = product.PID"
-    );
+    // 1. Get pagination parameters from the query string, or set defaults
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
 
-    return res.status(200).json(rows);
+    // 2. Calculate the offset
+    // For page 1: (1 - 1) * 10 = 0 (starts at the first row)
+    // For page 2: (2 - 1) * 10 = 10 (starts at the 11th row)
+    const offset = (page - 1) * limit;
+
+    // 3. Get the total count for the frontend (optional, but highly recommended)
+    // This allows the client to know the total number of pages.
+    const [totalRows] = await pool.query("SELECT COUNT(*) as total FROM sales");
+    const totalCount = totalRows[0].total;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // 4. Fetch the paginated sales data using LIMIT and OFFSET
+    const salesQuery = `
+      SELECT 
+        sales.*, 
+        product.Product_name 
+      FROM 
+        sales 
+      JOIN 
+        product ON sales.PID = product.PID
+      LIMIT ? 
+      OFFSET ?
+    `;
+
+    // Use prepared statements (the array [limit, offset]) for security
+    const [rows] = await pool.query(salesQuery, [limit, offset]);
+
+    // 5. Send back the data along with pagination metadata
+    return res.status(200).json({
+      data: rows,
+      pagination: {
+        totalCount,
+        totalPages,
+        currentPage: page,
+        limit: limit,
+      },
+    });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error in allSalesHandler:", error);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while fetching sales data." });
   }
 };
 
