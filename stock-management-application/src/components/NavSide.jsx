@@ -10,7 +10,16 @@ import icon_sell from "../assets/icons/sell.svg";
 import icon_logout from "../assets/icons/logout.svg";
 import axios from "axios";
 
-import { House, BadgeDollarSign, ShoppingBag, Handshake, ShoppingCart, ChartNoAxesColumn, Calculator, LogOut  } from "lucide-react"
+import {
+  House,
+  BadgeDollarSign,
+  ShoppingBag,
+  Handshake,
+  ShoppingCart,
+  ChartNoAxesColumn,
+  Calculator,
+  LogOut,
+} from "lucide-react";
 
 // enviroment variable
 const BackEndURL = import.meta.env.VITE_BACKEND_URL;
@@ -19,10 +28,9 @@ const NavSide = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
-  const[isAdmin, setIsAdmin] = useState(false);
-  let att =
-    `pl-4 py-5 flex gap-2 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-6 bg-gray-100 ml-2 `;
-  let att2 = `pl-4 py-4 flex items-center gap-2 text-xl mt-6 border border-black rounded justify-center mx-2  hover:text-gray-800`;
+  const [isAdmin, setIsAdmin] = useState(false);
+  let att = `pl-4 py-3 flex gap-1 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-5 bg-gray-100 ml-2 `;
+  let att2 = `pl-4 py-3 flex items-center gap-1 text-xl mt-5 border border-black rounded justify-center mx-2  hover:text-gray-800`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +38,7 @@ const NavSide = () => {
         const response = await axios.get(`${BackEndURL}/auth/protectedRoute`, {
           withCredentials: true,
         });
-        
+
         setIsAdmin(response?.data?.user?.userType === "admin" ? true : false);
       } catch (error) {
         if (error.response) {
@@ -119,18 +127,24 @@ const NavSide = () => {
           Sell Now
         </Link>
         <Link to="/pages/buy" className={value === 5 ? att : att2}>
-         <ShoppingCart />
+          <ShoppingCart />
           Buy Now
         </Link>
         <Link to="/pages/inventory" className={value === 6 ? att : att2}>
           <ChartNoAxesColumn />
           Invetory Level
         </Link>
-        <Link to="/pages/cogs" className={ isAdmin ? (value === 7 ? att : att2) : "hidden" }>
+        <Link
+          to="/pages/cogs"
+          className={isAdmin ? (value === 7 ? att : att2) : "hidden"}
+        >
           <Calculator />
           COGS
         </Link>
-        <Link to="/pages/user-management" className={ isAdmin ? (value === 8 ? att : att2) : "hidden" }>
+        <Link
+          to="/pages/user-management"
+          className={isAdmin ? (value === 8 ? att : att2) : "hidden"}
+        >
           <Calculator />
           User Management
         </Link>

@@ -1,7 +1,6 @@
 import { pool } from "../config/db.js";
 
 export const allPurchaseHandler = async (req, res) => {
-  console.log("loading all purchased inventories from the database");
   try {
     const [rows] = await pool.query(
       "SELECT purchased_inventory.*, product.Product_name FROM purchased_inventory JOIN product ON purchased_inventory.PID = product.PID"
@@ -13,7 +12,6 @@ export const allPurchaseHandler = async (req, res) => {
 };
 
 export const makePurchaseHandler = async (req, res) => {
-  console.log("making your purchase");
   const {
     product_id,
     quantity,
@@ -59,17 +57,6 @@ export const handleEditPurchase = async (req, res) => {
     Color,
     isImported,
   } = req.body;
-  console.log(
-    PIID,
-    PID,
-    Quantity,
-    Unit_Price,
-    Seller,
-    purchaseDate,
-    Description,
-    Color,
-    isImported
-  );
   try {
     const [rows] = await pool.query(
       "UPDATE purchased_inventory SET PID = ?, Quantity = ?, Unit_Price = ?, Seller = ?, Date = ?, Description = ?, Total_Price = ?, Color = ?, isImported = ? WHERE PIID = ?",
@@ -86,10 +73,8 @@ export const handleEditPurchase = async (req, res) => {
         PIID,
       ]
     );
-    console.log(rows);
     res.status(200).json({ message: "Purchase Edited" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };

@@ -32,6 +32,7 @@ const Cart = () => {
       setIsQuotation(false);
       generatePDF(cart);
       clearCart();
+      sessionStorage.removeItem("sales");
       alert(response.data.message);
     } catch (error) {
       if (error.response) {

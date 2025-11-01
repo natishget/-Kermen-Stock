@@ -1,7 +1,6 @@
 import { pool } from "../config/db.js";
 
 export const getAllDataHandler = async (req, res) => {
-  console.log("Getting all the data for the home page");
   try {
     // Retrieve total sales and count
     const [salesRows] = await pool.query(
@@ -72,7 +71,6 @@ export const getAllDataHandler = async (req, res) => {
 
     res.status(200).json(retrievedData);
   } catch (error) {
-    console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
