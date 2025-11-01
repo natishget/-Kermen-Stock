@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import authRoute from "./routes/auth.route.js";
@@ -8,7 +11,7 @@ import allDataRoute from "./routes/allData.route.js";
 import financialRoute from "./routes/financial.route.js";
 import productRoute from "./routes/product.route.js";
 import cookieParser from "cookie-parser";
-import userRoute from "./routes/user.route.js"
+import userRoute from "./routes/user.route.js";
 
 import bcrypt from "bcrypt";
 
@@ -39,7 +42,5 @@ app.use("/api/user", userRoute);
 app.listen(8800, () => {
   console.log("Connected to backend on port 8800.");
 });
-
-console.log("server is running on 8800");
 
 // console.log(await bcrypt.hash("123456", 10));

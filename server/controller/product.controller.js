@@ -2,7 +2,6 @@ import { pool } from "../config/db.js";
 import fs from "fs";
 
 export const addNewProduct = async (req, res) => {
-  console.log("adding new product");
   try {
     const { product_name, description, unit_of_measurment } = req.body;
     const [rows] = await pool.query(

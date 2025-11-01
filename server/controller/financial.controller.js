@@ -155,11 +155,8 @@ LEFT JOIN ProductNames pn -- <--- NEW JOIN
       endDate, // 7
     ]);
 
-    console.log("Rows:", rows);
-
     res.status(200).json({ message: rows });
   } catch (error) {
-    console.error("Error fetching inventory metrics:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

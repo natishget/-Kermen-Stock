@@ -63,6 +63,7 @@ const Buy = () => {
           data,
           { withCredentials: true }
         );
+        sessionStorage.removeItem("purchases");
         alert("Purchased Completed");
       } catch (error) {
         if (error.response) {

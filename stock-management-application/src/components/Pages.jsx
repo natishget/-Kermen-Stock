@@ -29,7 +29,6 @@ const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 const Pages = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
   const [currentPath, setCurrentPath] = useState("");
   const [loginUserData, setLoginUserData] = useState();
 
@@ -73,6 +72,7 @@ const Pages = () => {
         } else {
           alert("Error: " + error.message);
         }
+        navigate("/");
       }
     };
     fetchData();
