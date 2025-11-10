@@ -20,6 +20,8 @@ import Cart from "./pages/Cart";
 import COGS from "./pages/COGS";
 import UserManagement from "./pages/UserManagement";
 
+import { ShoppingCart } from "lucide-react";
+
 import axios from "axios";
 import DialogForAddUser from "./DialogBox/DialogForAddUser";
 
@@ -79,8 +81,9 @@ const Pages = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 h-screen w-full text-white overflow-hidden ">
-      <header className="bg-mycolor h-[13%] flex justify-between items-center drop-shadow-xl">
+    <div className="bg-gray-100 h-screen w-full text-white flex flex-col">
+      {/* header stays fixed height */}
+      <header className="flex-none bg-mycolor h-[13%] flex justify-between items-center drop-shadow-xl">
         <img src={logo} alt="Kermen logo" className="w-32 h-16 p-2" />
         <p className="self-center text-xl text-gray-600 font-bold">
           Stock Management Application -
@@ -90,26 +93,27 @@ const Pages = () => {
           <DialogForAddUser />
           <DialogForAddProduct />
           <Link to="/pages/cart">
-            <img src={Cart_png} alt="cart" className=" mr-6 w-8" />
+            <ShoppingCart className="text-yellow-500 mr-6" />
           </Link>
         </div>
       </header>
 
-      <div className="flex gap-5 h-[87%]">
-        <NavSide />
-        {/* <BrowserRouter> */}
-        <Routes>
-          <Route index path="/" element={<Home userData={loginUserData} />} />
-          <Route exact path="sell" element={<Sell />} />
-          <Route path="buy" element={<Buy />} />
-          <Route path="purchase" element={<Purchase />} />
-          <Route path="sales" element={<Sales />} />
-          <Route path="inventory" element={<Develop />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="cogs" element={<COGS />} />
-          <Route path="user-management" element={<UserManagement />} />
-        </Routes>
-        {/* </BrowserRouter>  */}
+      {/* main area fills remaining height; nav stays in place, pages scroll */}
+      <div className="flex-1 flex overflow-hidden">
+        <NavSide className="flex-none h-full" />
+        <div className="w-[87%] h-full overflow-auto">
+          <Routes>
+            <Route index path="/" element={<Home userData={loginUserData} />} />
+            <Route exact path="sell" element={<Sell />} />
+            <Route path="buy" element={<Buy />} />
+            <Route path="purchase" element={<Purchase />} />
+            <Route path="sales" element={<Sales />} />
+            <Route path="inventory" element={<Develop />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="cogs" element={<COGS />} />
+            <Route path="user-management" element={<UserManagement />} />
+          </Routes>
+        </div>
       </div>
     </div>
   );

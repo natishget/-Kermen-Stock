@@ -220,7 +220,7 @@ const Sales = () => {
 
   return (
     <>
-      <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+      <div className="  m-5">
         <h1 className="text-gray-600 font-bold text-4xl">
           <span className="text-blue-500">Sales</span> Table
         </h1>

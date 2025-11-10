@@ -94,11 +94,11 @@ const Buy = () => {
   };
 
   return (
-    <div className="w-full overflow-hidden no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
-      <div className="w-full mt-24 md:pt-28 pt-0">
+    <div className=" m-5">
+      <div className="w-full md:flex justify-evenly items-center">
         <form
           action=""
-          className="w-full bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 md:pb-20 pt-5"
+          className="w-[60%] bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 py-6"
         >
           <h1 className="md:text-4xl text-3xl font-bold">
             Buy <span className="text-yellow-500">Now</span>
@@ -230,9 +230,9 @@ const Buy = () => {
           </button>
           <br />
         </form>
-      </div>
-      <div className="">
-        <img src={buy} alt="" className="w-4/5 pl-10 pt-20 md:pb-0 pb-16" />
+        <div className="w-[30%]">
+          <img src={buy} alt="" className=" pl-10 pt-20 md:pb-0 pb-16" />
+        </div>
       </div>
     </div>
   );

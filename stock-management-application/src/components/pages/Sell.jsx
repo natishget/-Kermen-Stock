@@ -102,12 +102,12 @@ const Sell = () => {
   };
 
   return (
-    <div className=" w-full mb-2 overflow-hidden md:no-scrollbar hover:overflow-y-scroll md:flex justify-center items-center">
-      <div className="w-full mt-24 md:pt-28 ">
+    <div className="m-5">
+      <div className="w-full md:flex justify-evenly items-center">
         <form
           action=""
           onSubmit={handleSubmit}
-          className="w-full bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 md:pb-20 pt-5"
+          className="w-[60%] bg-white text-gray-600 border border-gray-200 shadow-2xl flex-col justify-center items-center pl-10 py-5"
         >
           <h1 className="md:text-4xl text-3xl font-bold">
             Sell <span className="text-blue-300">Now</span>
@@ -235,9 +235,9 @@ const Sell = () => {
           </button>
           <br />
         </form>
-      </div>
-      <div className="mt-5 md:pb-0 pb-16">
-        <img src={sell} alt="" className="w-4/5 pl-10 pt-20" />
+        <div className="w-[30%] mt-5 md:pb-0 pb-16">
+          <img src={sell} alt="" className=" pl-10 pt-20" />
+        </div>
       </div>
     </div>
   );
