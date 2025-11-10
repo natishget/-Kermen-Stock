@@ -220,7 +220,7 @@ const Sales = () => {
 
   return (
     <>
-      <div className="  m-5">
+      <div className="m-5">
         <h1 className="text-gray-600 font-bold text-4xl">
           <span className="text-blue-500">Sales</span> Table
         </h1>
