@@ -1,7 +1,6 @@
 import { pool } from "../config/db.js"; // Ensure correct DB connection import
 
 export const calculateCOGSAndProfit = async (req, res) => {
-  console.log("Calculating COGS and Profit Metrics...");
   try {
     // Define the date range (Modify as needed)
     const startDate = "2025-01-01";
