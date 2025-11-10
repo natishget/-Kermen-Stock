@@ -16,7 +16,6 @@ export const addNewProduct = async (req, res) => {
 };
 
 export const getProducts = async (req, res) => {
-  console.log("getting all products");
   try {
     const [rows] = await pool.query("SELECT * FROM product");
     res.status(200).json(rows);
