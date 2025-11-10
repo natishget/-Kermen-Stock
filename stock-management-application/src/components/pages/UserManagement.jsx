@@ -168,7 +168,7 @@ const UserManagement = () => {
 
   if (!isAdmin) {
     return (
-      <div className="w-full mt-10 relative overflow-x-auto overflow-hidden no-scrollbar hover:overflow-y-scroll">
+      <div className="m-5">
         <img src={NotFound} alt="not found image" />
       </div>
     );

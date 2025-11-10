@@ -198,7 +198,7 @@ const Cart = () => {
   };
 
   return (
-    <div className=" w-full mb-16 col-span-4 row-span-3 overflow-hidden md:no-scrollbar hover:overflow-y-scroll justify-center items-center">
+    <div className="  mb-16 col-span-4 row-span-3 justify-center items-center m-5">
       <div className="flex justify-between items-center m-4">
         <h2 className="text-2xl font-bold my-4 text-gray-600">
           {isQuotation ? "Quotation" : "Sales"}{" "}

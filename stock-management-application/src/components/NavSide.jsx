@@ -29,8 +29,8 @@ const NavSide = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
-  let att = `pl-4 py-3 flex gap-1 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-2xl mt-5 bg-gray-100 ml-2 `;
-  let att2 = `pl-4 py-3 flex items-center gap-1 text-xl mt-5 border border-black rounded justify-center mx-2  hover:text-gray-800`;
+  let att = `pl-4 py-1 flex gap-1 items-center border-l-4 border-yellow-400 rounded text-gray-600 text-base mt-2 bg-gray-100 ml-2 `;
+  let att2 = `pl-4 py-1 flex items-center gap-1 text-base mt-2 border border-gray-400 rounded justify-center mx-2  hover:text-gray-800`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,7 +108,7 @@ const NavSide = () => {
   };
 
   return (
-    <div className="w-[15%] h-full bg-mycolor text-gray-400 flex flex-col justify-between pb-8 font-bold text-lg drop-shadow-xl">
+    <div className="w-[15%] sticky h-[calc(100vh-13vh)] bg-mycolor text-gray-400 flex flex-col justify-between pb-8 font-bold text-lg drop-shadow-xl">
       <div className="">
         <Link to="/pages/" className={value === 1 ? att : att2}>
           <House />
@@ -149,13 +149,13 @@ const NavSide = () => {
           User Management
         </Link>
       </div>
-      <div
-        className="flex justify-center items-center cursor-pointer border border-gray-600 bg-gray-800 text-white py-2 rounded-full mx-4"
+      <a
+        className="flex justify-center items-center cursor-pointer border border-gray-600 bg-gray-800 text-white py-1 rounded-full mx-4 text-base"
         onClick={handleLogout}
       >
         <LogOut />
         Logout
-      </div>
+      </a>
     </div>
   );
 };
