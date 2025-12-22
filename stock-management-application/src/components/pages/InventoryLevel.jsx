@@ -165,7 +165,7 @@ const InventoryLevel = () => {
   return (
     <>
       <div className="m-5">
-        <h1 className="text-gray-600 font-bold text-4xl">
+        <h1 className="text-gray-600 font-bold text-4xl mb-3">
           <span className="text-blue-500">Inventory</span> Level
         </h1>
         <div className="bg-black">

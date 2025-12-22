@@ -90,8 +90,8 @@ const Pages = () => {
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
         <div className="flex justify-center items-center">
-          <DialogForAddUser />
-          <DialogForAddProduct />
+          {loginUserData?.user?.userType === "admin" && <DialogForAddUser />}
+          {loginUserData?.user?.userType === "admin" && <DialogForAddProduct />}
           <Link to="/pages/cart">
             <ShoppingCart className="text-yellow-500 mr-6" />
           </Link>

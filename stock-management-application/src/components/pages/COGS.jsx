@@ -223,9 +223,10 @@ const COGS = () => {
   return (
     <>
       <div className="m-5">
-        <h1 className="text-gray-600 font-bold text-4xl">
+        <h1 className="text-gray-600 font-bold text-4xl mb-3">
           <span className="text-red-500">Financial</span> Data
         </h1>
+
         <div className="bg-black">
           <ThemeProvider theme={tableTheme}>
             <MaterialReactTable
