@@ -10,6 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate(); // Initialize navigate
 
   // protected Route
@@ -40,7 +41,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isAdmin === null) {
-      alert("Please choose user type");
+      setErrorMessage("Please select a user type (Admin or User).");
     } else {
       try {
         const response = await axios.post(
@@ -51,7 +52,7 @@ const Login = () => {
         navigate("/pages");
       } catch (error) {
         if (error.response) {
-          alert(error.response.data.message);
+          setErrorMessage(error.response.data.message);
           console.log(error.response.data.message);
         } else if (error.request) {
           alert("No response from server. Please try again.");
@@ -131,6 +132,9 @@ const Login = () => {
               </label>
             </div>
             <br />
+            {errorMessage && (
+              <p className="text-red-500 text-sm mb-2">{errorMessage}</p>
+            )}
             <button
               type="submit"
               className="rounded-full bg-yellow-400 hover:bg-yellow-500 transition md:w-80 w-72 my-4 py-2.5  font-bold"

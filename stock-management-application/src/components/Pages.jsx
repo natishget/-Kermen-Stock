@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { CartContext } from "./CartContext";
 import {
   Routes,
   Route,
@@ -8,7 +9,6 @@ import {
 } from "react-router-dom";
 import DialogForAddProduct from "./DialogBox/DialogForAddProduct";
 import logo from "../assets/kermen_logo2.png";
-import Cart_png from "../assets/shopping-cart.png";
 import NavSide from "./NavSide";
 import Home from "../components/pages/Home";
 import Sell from "./pages/Sell";
@@ -33,6 +33,7 @@ const Pages = () => {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState("");
   const [loginUserData, setLoginUserData] = useState();
+  const { cart, clearCart } = useContext(CartContext);
 
   // axios credentials
   axios.defaults.withCredentials = true;
@@ -89,11 +90,18 @@ const Pages = () => {
           Stock Management Application -
           <span className="text-yellow-400"> {currentPath}</span>{" "}
         </p>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mr-6">
           {loginUserData?.user?.userType === "admin" && <DialogForAddUser />}
           {loginUserData?.user?.userType === "admin" && <DialogForAddProduct />}
-          <Link to="/pages/cart">
-            <ShoppingCart className="text-yellow-500 mr-6" />
+          <Link to="/pages/cart" className="relative">
+            <div
+              className={`${
+                cart.length === 0 && "hidden"
+              } absolute bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs -top-3 -right-2`}
+            >
+              {cart.length}
+            </div>
+            <ShoppingCart className="text-yellow-500 " />
           </Link>
         </div>
       </header>

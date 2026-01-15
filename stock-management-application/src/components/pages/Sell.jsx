@@ -81,17 +81,21 @@ const Sell = () => {
   };
 
   const handleAddToCart = () => {
-    if (
-      data.quantity === "" ||
-      data.date === "" ||
-      data.description === "" ||
-      data.unit_price === "" ||
-      data.color === ""
-    )
-      alert("fill the form propely");
-    else {
-      addToCart(data);
-      alert("Item added to cart");
+    try {
+      if (
+        data.quantity === "" ||
+        data.date === "" ||
+        data.description === "" ||
+        data.unit_price === "" ||
+        data.color === ""
+      )
+        alert("fill the form propely");
+      else {
+        addToCart(data);
+        alert("Item added to cart");
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
     }
   };
 

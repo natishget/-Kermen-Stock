@@ -2,7 +2,7 @@ import { pool } from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const ACCESS_TOKEN_SECRET = "kermenAlu";
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 export const loginHandler = async (req, res) => {
   const { username, password, isAdmin } = req.body;
@@ -72,7 +72,7 @@ export const loginHandler = async (req, res) => {
 
 export const createUserHandler = async (req, res) => {
   const { username, password, isAdmin, adminPass } = req.body;
-  if (adminPass !== "AluKermen") {
+  if (adminPass !== process.env.CREATE_USER_PASSWORD) {
     return res.status(400).json({ message: "Register Password is wrong" });
   }
   try {

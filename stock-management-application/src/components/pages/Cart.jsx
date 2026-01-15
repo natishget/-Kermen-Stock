@@ -1,5 +1,5 @@
 // src/components/CartPage.js
-import React, { useContext, useMemo, useEffect, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { CartContext } from "../CartContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -23,8 +23,13 @@ const BackEndURL = import.meta.env.VITE_BACKEND_URL;
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cart, clearCart } = useContext(CartContext);
+  const { cart, clearCart, removeFromCart } = useContext(CartContext);
   const [isQuotation, setIsQuotation] = useState(true);
+
+  const handleDeletePurchase = (PID) => {
+    console.log("Deleting product with ID:", PID);
+    removeFromCart(PID);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -237,7 +242,7 @@ const Cart = () => {
                   gap: "8px",
                 }}
               >
-                <IconButton
+                {/* <IconButton
                   sx={{ color: "#1e88e5" }}
                   onClick={() => {
                     console.log(row.original);
@@ -250,12 +255,12 @@ const Cart = () => {
                       Description: row.original.Description,
                     });
                   }}
-                ></IconButton>
+                ></IconButton> */}
                 <IconButton
                   color="error"
-                  // onClick={() => {
-                  //   handleDeletePurchase(row.original.PIID);
-                  // }}
+                  onClick={() => {
+                    handleDeletePurchase(row.original.product_id);
+                  }}
                 >
                   {/* <DialogForPurchaseEdit PurchaseData={row.original} /> */}
                   <DeleteIcon sx={{ color: "#d44c3d" }} />
